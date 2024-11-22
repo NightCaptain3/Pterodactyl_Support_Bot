@@ -1,0 +1,3276 @@
+server_id: "122900397965705216"
+
+config:
+  prefix: "."
+  clear_commands: true
+
+channel_groups:
+  - channels:
+    - "272117330207571969"
+    mentions:
+      ping:
+        reaction: 
+        - "🍩"
+      mention:
+        reaction: 
+        - "🍩"
+  - channels:
+      - "658550982975946762" # panel-help
+      - "764995848101691402" # installation-help
+      - "817872891764670514" # wings-help
+      - "1027065634829381672" # help forum
+    commands:
+      - command: nat
+        response:
+         - |
+           Suppose you are having trouble connecting to a Panel or Node on the same network as your device, or Panel and Wings can't reach each other on the same network. In that case, you may have to edit your `/etc/hosts` file to point the domain to the local IP, as some routers don't handle NAT Loopback correctly, if at all. On Windows, this file is at `C:\Windows\System32\Drivers\etc\hosts`
+           
+           ```
+           192.168.1.24 panel.mydomain.com node1.mydomain.com
+           192.168.1.25 node2.mydomain.com
+           ```
+      - command: proxy
+        response:
+          - |
+            Pterodactyl has features to enable use of proxies, however we cannot provide support for proxies as it adds great complexity to the application set up.  Troubleshooting complex network setups involving tunnels and proxies is extremely difficult to do without access to that network.  Supporting complex network issues is outside the scope of this support.
+      - command: cgroup
+        response:
+          - |
+            Should you experience issues with Docker statistics, there are a few ways to fix this. **Updating Docker to 20.10.16+**, enabling OOM killer for the servers, or changing cgroup version to V2. This is an issue with a containerd dependency that is **fixed in Docker 20.10.16+.**
+            
+            You can type `sudo docker info | grep "Cgroup Version"` to check your active cgroup version.
+            
+            To change your Cgroup version open the file at `/etc/default/grub` and add `systemd.unified_cgroup_hierarchy=1` to the CMDLINE_LINUX, without removing any existing parameters inside. Type =1 to enable cgroup V2 and =0 for V1.
+            
+            It should look similar to `GRUB_CMDLINE_LINUX="systemd.unified_cgroup_hierarchy=1"`. It might contain other existing parameters, in which case, you should add the new one at the end, e.g `"swapaccount=1 systemd.unified_cgroup_hierarchy=1"`
+            
+            After that, run `sudo update-grub` followed by `sudo reboot` to apply it and restart the machine.
+            
+      - command: vague
+        response:
+          - |
+            Please explain the issue you're experiencing in as much detail as possible. Preferably with error messages in a **text format or paste link to logs**. Nobody can assist you without information that helps to understand the issue. Help us help you. Messages such as "doesn't work" or "i need help" will most likely be ignored.
+
+      - command: php upgrade
+        response:
+          - "Follow this guide to upgrade your PHP and Composer installation"
+          - "<https://pterodactyl.io/guides/php_upgrade.html>"
+      - command: migrate
+        response:
+          - "Follow this guide to migrate your Panel or Wings:"
+          - "<https://gist.github.com/Software-Noob/c18258658bef28e73b24d11d02d24915>"
+          
+      - command: port
+        response:
+          - "Use the following command to see what's running on a specific port: (replacing `<port>` with your desired port number)"
+          - "```ss -plnt | grep :<port>```"
+      - command: artisan
+        response:
+          - "Read the guide below to learn more about artisan commands. For example, how to create a new user or perform bulk-power actions:"
+          - "<https://pterodactyl.io/community/tutorials/artisan.html>"          
+      - command: learnlinux
+        response:
+          - "**You are expected to understand how to read documentation to use this Panel.** We have spent many hours detailing how to install or upgrade our software. Please, take some time and read rather than copy and pasting and then complaining when things do not work."
+          - ""
+          - "If you expect to be able to install this with no understanding of basic linux system administration you should stop and turn around now"
+      - command: logs
+        response:
+          - "We need some logs from you in order to help debug this issue."
+          - "**Panel:** ```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```"
+          - "**Wings:** ```sudo wings diagnostics```"
+          - "Please see `.plogs` and `.wlogs` respectively for more information."
+      - command: plogs
+        response:
+          - "You'll need to grab the error logs from the Panel. The following command uploads the last 150 lines of this day's log to our pastebin and provides a link you can share."
+          - "```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```"
+             
+      - command: ratelimit
+        response:
+          - |
+             The API ratelimits can be adjusted by adding the values below to your dotenv file. These are the default limits per minute. Modify them as you see fit.
+             
+             ```APP_API_CLIENT_RATELIMIT=720
+             APP_API_APPLICATION_RATELIMIT=240```  
+             
+             You can open dotenv file directly with `nano /var/www/pterodactyl/.env`
+             
+      - command: usage
+        response:
+          - |
+             The resource usage is retrieved from Docker stats. Type `docker stats` and make sure that statistics are displayed correctly for all containers.
+             
+             Resource usage stuck at 0 can be caused by your kernel cgroups not functioning or wrong Docker version installed for example, by using package manager or performing system package upgrade. You would need `docker-ce` and not `docker.io, docker-engine, docker`. Docker versions below 20.10.16 do not work properly with cgroup V2.
+             
+             The correct Docker-ce version is installed at <https://pterodactyl.io/wings/1.0/installing.html#installing-docker>
+             
+             Restart the servers to rebuild containers once you've fixed your docker stats.            
+             
+      - command: wlogs
+        response:
+          - "You'll need to grab error logs for Wings and share the link with us. The following command will help you collect the required information for debugging: `sudo wings diagnostics`"
+      - command: docs
+        response:
+          - "The documentation you are looking for can be found at <https://pterodactyl.io/>."
+      - command: docs wings
+        response:
+          - "The Wings documentation can be found at <https://pterodactyl.io/wings/installing.html>."
+      - command: docs panel
+        response:
+          - "The panel documentation can be found at <https://pterodactyl.io/panel/getting_started.html>."
+      - command: 2fa
+        response:
+          - "Please read our guide on how to disable 2FA: <https://pterodactyl.io/panel/1.0/additional_configuration.html#_2fa>"
+      - command: paste sites
+        response:
+          - "bin.ptdl.co runs termbin - <http://termbin.com/>"
+          - "ptero.co runs haste-server - <https://github.com/seejohnrun/haste-server>"
+      - command: help
+        response:
+          - "Hello, I am a support bot created by `parkervcp` designed to help solve simple problems."
+          - "Check me out by running any of the following commands: `.plogs` or `.wlogs`!"
+      - command: wings restart
+        response:
+          - "To restart Wings using systemd you need to run `systemctl restart wings`"
+
+      - command: pbuild
+        response:
+          - "You must rebuild the Panel assets to apply any new changes"
+          - "<https://pterodactyl.io/community/customization/panel.html>"
+      - command: armbuild
+        response:
+          - |
+             ARM64 Wings binary can be found in the Github releases <https://github.com/pterodactyl/wings/releases>. 64-bit CPU and OS required.
+             
+             ```
+             curl -L -o /usr/local/bin/wings https://github.com/pterodactyl/wings/releases/latest/download/wings_linux_arm64
+             ```
+             
+      - command: wbuild
+        response:
+          - "You must download Wings source code from <https://github.com/pterodactyl/wings>, edit it, and then build the Wings binary to apply any changes:"
+          - "<https://pterodactyl.io/community/customization/wings.html>"          
+      - command: pteroq
+        response:
+          - |
+            Have trouble with automated tasks?
+            
+            Make sure the queue worker is running with `systemctl status pteroq`
+            Restart the worker should it already be running to kick it back to work using `systemctl restart pteroq`
+
+            When neither work, make sure that you also created a crontab for your pteroq worker <https://pterodactyl.io/panel/1.0/getting_started.html#crontab-configuration>       
+            
+      - command: minecraft
+        response:
+          - "View our minecraft proxy guide <https://pterodactyl.io/community/games/minecraft.html>"             
+      - command: webroot
+        response:
+          - "You must be in the web root of Pterodactyl at `/var/www/pterodactyl` when performing updates or artisan commands"
+      - command: mounts
+        response:
+          - "View our using mounts guide at <https://pterodactyl.io/guides/mounts.html>"          
+      - command: wdown
+        response:
+          - |
+            Make sure that your wings are running using `systemctl status wings` and that your Wings ports (by default 8080/2022) are open in your firewall or router. This website can check your ports <https://dnschecker.org/port-scanner.php>
+
+            Browser console errors can also provide additional debugging information. More troubleshooting steps can be found at <https://pterodactyl.io/panel/1.0/troubleshooting.html#cannot-connect-to-server-errors>
+            
+            Should the panel and wings be located on the same network, you might experience NAT reflection issues. In that case, type `.nat` for more information.
+            
+      - command: s3backup
+        response:
+          - "View our S3 backup configuration guide: <https://pterodactyl.io/panel/1.0/additional_configuration.html#using-s3-backups>" 
+      - command: mycnf
+        response:
+          - " Type `find /etc -iname my.cnf` to find the location of the my.cnf file. Restart your mysql with `systemctl restart mysql` to apply any changes that you made to config."           
+      - command: database
+        response:
+          - |
+            If your server cannot see the database, please make sure your mod/plugin is connecting to pterodactyl0 interface `172.18.0.1` or the public IP to reach the local database. You can not use localhost or 127.0.0.1 as that would be the container itself.
+            
+            You also have to configure the database bind-address to listen on all interfaces following the guide below.
+            <https://pterodactyl.io/tutorials/mysql_setup.html#creating-a-database-host-for-nodes>
+            
+      - command: guides
+        response:
+          - |
+            The Panel install guide is located here: <https://pterodactyl.io/panel/1.0/getting_started.html>
+            The Wings install guide is located here: <https://pterodactyl.io/wings/1.0/installing.html>
+            
+            Lycka till!
+      - command: upgrades
+        response:
+          - "The Panel upgrade guide is located here: <https://pterodactyl.io/panel/1.0/updating.html>"
+          - "The Wings upgrade guide is located here: <https://pterodactyl.io/wings/1.0/upgrading.html>"
+      - command: update
+        response:
+          - "The Panel upgrade guide is located here: <https://pterodactyl.io/panel/1.0/updating.html>"
+          - "The Wings upgrade guide is located here: <https://pterodactyl.io/wings/1.0/upgrading.html>"
+      - command: php timezones
+        response:
+          - "A list of timezones that php supports is located here <https://www.php.net/manual/en/timezones.php>"
+      - command: php check
+        response:
+          - "Check your installed php versions with the following commands."
+          - "```"
+          - "# Ubuntu/Debian"
+          - "apt list --installed | grep php"
+          - "# CentOS"
+          - "yum list installed | grep php"
+          - "```"
+      - command: api
+        response:
+          - "The 'official' API documentation for Pterodactyl 1.0 can be found here: https://dashflo.net/docs/api/pterodactyl/v1/#introduction"
+      - command: envfile
+        response:
+          - "The env file can be found at `/var/www/pterodactyl/.env`. Files starting with a `.` in Linux are hidden so it may not show up in file browsers by default. You can open it directly with `nano /var/www/pterodactyl/.env`"
+          
+      - command: datahost
+        response:
+          - "You can add database host on the **admin** panel at Databases -> Create New. You have to create a database host user first:  <https://pterodactyl.io/tutorials/mysql_setup.html#creating-a-database-host-for-nodes>"          
+          
+      - command: apitokens
+        response:
+          - "`/client` endpoint requires a client token from the client view, such as `your-panel.com/account/api` and `/application` endpoint token can be generated from the admin panel"                
+          
+      - command: sslgen
+        response:
+          - "View our guide about generating SSL certificates <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>"
+      - command: translate
+        response:
+          - "There is no translation system for the Panel at this moment. It will be released whenever it is ready"
+      - command: webconf
+        response:
+          - "Your server block file would be located by default at `/etc/nginx/sites-available/pterodactyl.conf` **OR** `/etc/apache2/sites-available/pterodactyl.conf` depending on what web server you are using."
+          - "** **"
+          - "CentOS paths would be at `/etc/nginx/conf.d/pterodactyl.conf` **OR** `/etc/apache2/sites-available/pterodactyl.conf`."
+      - command: legacy
+        response:
+          - "0.7 has reached **END-OF-LIFE** and is no longer supported within this community. Please upgrade to the 1.x version:"
+          - "Panel: <https://pterodactyl.io/panel/1.0/legacy_upgrade.html>"
+          - "Wings: <https://pterodactyl.io/wings/1.0/migrating.html>"
+      - command: wingsconf
+        response:
+          - "The Wings config file can be found at `/etc/pterodactyl/config.yml`"          
+      - command: serverfiles
+        response:
+          - "Your server files are stored in `/var/lib/pterodactyl/volumes/` by default."
+      - command: backupfiles
+        response:
+          - "Your backups are stored in `/var/lib/pterodactyl/backups/` by default."
+          
+      - command: selfhost
+        response:
+          - |
+            Your connection to Wings will most likely fail when you are self-hosting Wings in the same network you are trying to connect from. This is because your router can't connect to itself over the public IP. There are several ways to fix this:
+
+            **1.)** Enable NAT loopback/hairpinning in your router to force localhost connection
+            **2.)** Modify your `/etc/hosts` file to point your Wings FQDN to localhost         
+          
+      #- command: oldsql
+      #  response:
+      #    - "You may have to remove `WITH mysql_native_password`" 
+
+      - command: windows
+        response: &run_windows
+          - |
+            Let's clear some stuff up since it appears we're discussing running on Windows.
+
+            1.) The _Panel_ will run fine on a Windows machine. You'll need to figure out how to get it running, we do not offer any support.
+            2.) Wings **will not** run on Windows.
+
+            In all, we do not recommend trying to run any of this software on Windows, you'll be completely on your own.
+
+            Please see the following for our currently supported systems: <https://pterodactyl.io/wings/installing.html#supported-systems>
+   #   - command: scripts
+   #     response:
+   #       - "Script installations are not supported as they are known to have been malicious in the past. The official documentation is sufficient enough for anyone with a basic understanding of Linux: <https://pterodactyl.io/panel/1.0/getting_started.html>"
+       
+    keywords:
+      - keyword: "hello"
+        reaction: &hello_reaction
+          - "👋"
+        response: &hello_response
+          - |
+            Hello 👋, and welcome to the Pterodactyl Discord &user&! We're excited to see you here, but we'll likely need a bit more information from you in order to provide a good experience in these support channels.
+
+            Always share any errors or logs in a text format or using paste sites for me to assist you. Please make sure you've collected — and provide — any associated error logs relating to the service with which you're seeking help. The commands below should help you out, and once you've provided the logs I should be able to better assist you. 
+
+            **Panel:** ```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```
+            **Wings:** ```sudo wings diagnostics```
+            Please see `.plogs` and `.wlogs` respectively for more information.
+        exact: true
+
+      - keyword: "heyo"
+        reaction: *hello_reaction
+        response: *hello_response
+        exact: true
+
+      - keyword: "hey"
+        reaction: *hello_reaction
+        response: *hello_response
+        exact: true
+
+      - keyword: "hi"
+        reaction: *hello_reaction
+        response: *hello_response
+        exact: true
+
+      - keyword: "help"
+        reaction: *hello_reaction
+        response: *hello_response
+        exact: true
+
+      - keyword: "i need help"
+        reaction: *hello_reaction
+        response: *hello_response
+        exact: true
+      - keyword: "pls help"
+        reaction: *hello_reaction
+        response: *hello_response
+        exact: true
+
+      - keyword: "help me"
+        reaction: *hello_reaction
+        response: *hello_response
+        exact: true
+
+      - keyword: "dumb bot"
+        reaction: &bad_bot
+          - "😭"
+        exact: true
+      - keyword: "stupid bot"
+        reaction: *bad_bot
+        exact: true
+        
+      - keyword: "good bot"
+        reaction: &bot_love
+          - "❤️"
+        exact: true
+      - keyword: "thanks bot"
+        reaction: *bot_love
+        exact: true
+      - keyword: "thank you bot"
+        reaction: *bot_love
+        exact: true
+      - keyword: "smart bot"
+        reaction: *bot_love
+        exact: true        
+
+      - keyword: "wings.service failed"
+        response: &wings_diagnostics
+          - "&user& You'll need to grab error logs from Wings. The following command allows to easily collect the relevant data and share the link with us: `sudo wings diagnostics`"    
+
+      - keyword: "/api/servers` resulted in a `500 Internal"
+        response: *wings_diagnostics
+      - keyword: "wings.service: start request repeated too quickly"
+        response: *wings_diagnostics
+      - keyword: "failed to start pterodactyl wings daemon"
+        response: *wings_diagnostics
+      - keyword: "wings.service: failed"
+        response: *wings_diagnostics    
+        
+      - keyword: "/srv/daemon/config/core.json"
+        response:
+          - "Hello &user&! You appear to be using the old 0.6 daemon which has reach **END-OF-LIFE** and no longer receives any support."
+          - "In v1.0, `wings` replaces the old daemon."
+          - "Please follow this guide to switch to wings: <https://pterodactyl.io/wings/1.0/migrating.html>"
+        
+      - keyword: "http/e_conn_refused"
+        response:
+          - |
+            Your Panel is having some troubles connecting to your Wings instance. Chances are that Wings is offline or behind a firewall. You'll want to grab error logs from the Panel to help us resolve this issue. To do so, run the command below
+
+            ```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```
+
+            Please have a look at our list of common problems and solutions as well: <https://pterodactyl.io/panel/1.0/troubleshooting.html>
+    
+      - keyword: "xhr poll error"
+        response:
+          - "Hey, &user&! The `xhr poll error` only appears on the now deprecated 0.7 version of the panel which no longer receives support from this community and has reached **END-OF-LIFE**."
+          - ""
+          - "Please upgrade your panel to 1.X with the following guides."
+          - "**Panel:** <https://pterodactyl.io/panel/1.0/legacy_upgrade.html>"
+          - "**Wings/Daemon:** <https://pterodactyl.io/wings/1.0/migrating.html>"    
+
+      - keyword: "how to get logs"
+        response: &get_logs
+          - |
+            Ah, &user&, you've encountered some issues...Use the commands below to retrieve diagnostics and share the generated log link for us to admire.
+
+            **Panel:** ```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```
+            **Wings:** ```sudo wings diagnostics```
+            Please see `.plogs` and `.wlogs` respectively for more information.
+            
+      - keyword: "where get logs"
+        response: *get_logs
+      - keyword: "how do i get logs"
+        response: *get_logs 
+      - keyword: "how can i get logs"
+        response: *get_logs  
+      - keyword: "how i can get logs"
+        response: *get_logs          
+      - keyword: "how to get panel logs"
+        response: *get_logs  
+      - keyword: "how to get wings logs"
+        response: *get_logs 
+      - keyword: "how do i get panel logs"
+        response: *get_logs  
+      - keyword: "how i get wings logs"
+        response: *get_logs         
+
+      - keyword: "where is my.cnf"
+        response: &find_mycnf
+        - "&user&; Type `find /etc -iname my.cnf` to find the location of the my.cnf file. Restart your mysql with `systemctl restart mysql` to apply any changes that you made to config."
+
+      - keyword: "cant find my.cnf"
+        response: *find_mycnf
+      - keyword: "how to open my.cnf"
+        response: *find_mycnf
+
+      - keyword: "no logs found or an error occurred."
+        response:
+        - "&user&; You don't have any logs generated yet. You should start Wings in debug mode for the first time with `sudo wings --debug`" 
+        
+      - keyword: "logs redacted."
+        response:
+        - "&user&; You chose to redact the logs. There is nothing for us to read."         
+
+      - keyword: "how to update panel"
+        response:
+        - "&user&; You can find the Panel update guide at <https://pterodactyl.io/panel/1.0/updating.html>" 
+        
+      - keyword: "how to update wings"
+        response:
+        - "&user&; You can find the Wings update guide at <https://pterodactyl.io/wings/1.0/upgrading.html>"  
+        
+      - keyword: "close of closed channel"
+        response: &wingsFlexTape
+        - "&user&; Update your Wings to resolve the bug in Wings 1.5.4 <https://pterodactyl.io/wings/1.0/upgrading.html>"  
+      - keyword: "panic: send on closed channel"
+        response: *wingsFlexTape
+
+      - keyword: "use netcat"
+        response: &netcat
+          - |
+            Ah, &user&, you've stumbled into one of the smaller errors in life, unlike that time I went to Rio...
+
+            Anyways, you're just missing `netcat` on your system. We can fix this easily, just run one of the commands below based on your server OS and you should be up and running quicky.
+
+            **Ubuntu/Debian Systems:** `apt install -y netcat`
+            **CentOS/RHEL:** `yum install -y nmap-ncat`
+
+      - keyword: "cannot unmarshal array into go value of type api"
+        response: &unmarshal
+          - "&user&; Your Panel or Wings version is out of date and as such, they can't communicate. Make sure to always update both at the same time. Get the latest version by following these guides:"
+          - ""
+          - "**Panel:** <https://pterodactyl.io/panel/1.0/updating.html>"
+          - "**Wings:** <https://pterodactyl.io/wings/1.0/upgrading.html>"
+
+      - keyword: "cannot unmarshal string into go struct field"
+        response: *unmarshal
+      - keyword: "key path not found"
+        response: *unmarshal
+      - keyword: "cannot unmarshal array into go struct"
+        response: *unmarshal   
+
+      - keyword: "nc not found"
+        response: *netcat
+      - keyword: "nc: command not found"
+        response: *netcat
+      - keyword: "whoops, looks like something went"
+        response: &legacy_panel
+          - "Hey, &user&! You appear to be using legacy 0.7 panel. It has reached **END-OF-LIFE** and is no longer supported within this community. Please upgrade to the 1.x version."
+          - "Panel: <https://pterodactyl.io/panel/1.0/legacy_upgrade.html>"
+          - "Wings: <https://pterodactyl.io/wings/1.0/migrating.html>"
+
+
+      - keyword: "server\rebuildservercommand"
+        response: *legacy_panel
+      - keyword: "whoops, something went wrong"
+        response: *legacy_panel
+      - keyword: "failed to program nat chain: zone_conflict:"
+        response:
+        - "Are you experiencing firewalld zone conflicts? Delete it from your firewalld zone ```firewall-cmd --permanent --zone=trusted --remove-interface=pterodactyl0```"
+        - "After that reload `firewall-cmd --reload` and restart wings `systemctl restart wings`."
+        
+      - keyword: "tls: unknown certificate"
+        response: &gen_cert
+        - "You need to generate or renew a new valid certificate matching your domain. View our guide at <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>"
+        
+      - keyword: "ssl3_get_record:wrong version number"
+        response:
+        - |
+           &user&; You appear to have mismatched HTTP/HTTPS protocols. Both Panel and Wings must have a SSL certificate and use HTTPS to communicate with each other if either one of them is using HTTPS.
+           
+           Should you be proxying your Wings through Cloudflare, please read this: <https://pterodactyl.io/wings/1.0/configuration.html#enabling-cloudflare-proxy>
+        
+      - keyword: "tls: bad record mac"
+        response: *gen_cert
+      - keyword: "x509: certificate signed by unknown authority"
+        response: *gen_cert     
+      - keyword: "x509: certificate is not valid for any names"
+        response: *gen_cert          
+       #this might get false positives? Very common issue and only way to target it without breaking the yaml - softwarenoob 
+      - keyword: "illuminate\database\eloquent\factories\hasfactory"
+        response: &composer_dependency
+        - "&user&; Your composer core dependency install `composer install --no-dev --optimize-autoloader` was interrupted or failed. Try it again in your Panel install path and post here any errors that you might receive in a **text or log link format.**"
+        
+      - keyword: "vendor/autoload.php): failed to open stream: no such file or directory"
+        response: *composer_dependency  
+      - keyword: "no such file or directory in /var/www/pterodactyl/vendor/composer"
+        response: *composer_dependency
+        
+      - keyword: "$availableincludes must be array"
+        response: 
+          - |
+            &user&; You've gone out of your way to update composer dependencies and broke the Panel.
+            
+            Worry not, remove `composer.json`, `composer.lock` and `vendor` folder. After that, update the Panel to download the correct composer files and install the dependencies : <https://pterodactyl.io/panel/1.0/updating.html>
+        
+      - keyword: "no route to host"
+        response: &dns_error
+          - | 
+            Not good, &user&! The host you're trying to reach might be invalid or its firewall is blocking your connection attempts gracefully.
+            
+            If you believe the host to be correct and have checked it with `dig` or <https://dnschecker.org/>, it means your DNS might be experiencing issues. You can try to ping a different domain, such as Google and if it resolves the issue is not with your DNS and rather with the host you are trying to reach.
+          
+            ```
+            ping google.com
+            ```
+            
+            
+      - keyword: "unable to resolve host"
+        response: *dns_error 
+      - keyword: "[2002] php_network_getaddresses: getaddrinfo failed"
+        response: *dns_error
+        
+      - keyword: "no such host"
+        response: *dns_error
+        
+      - keyword: "no such host"
+        response: *dns_error
+            
+      - keyword: "server misbehaving"
+        response:
+          - "&user&; Failure to resolve domain names or IP addresses indicates that your DNS server is experiencing issues. You can try changing your DNS nameservers to `8.8.8.8`"
+          
+      - keyword: "unsupported protocol scheme"
+        response:
+          - | 
+            &user& You are missing a protocol scheme from the URL. Make sure your Panel URL contains `https://`or `http://` in the `.env` and Wings config.
+          
+      - keyword: "how to install theme"
+        response: &installTheme
+          - "&user&; Pterodactyl does not contain any theme system. Each third-party modification is a unique set of changes to the Panel code. The author of those modifications is the only person who knows how to apply them and should generally provide installation instructions."
+          - ""
+          - "<#574327246546796544> channel contains list of sites and themes/addons in the pinned messages."
+          
+      - keyword: "how to install a theme"
+        response: *installTheme
+      - keyword: "how do i install a theme"
+        response: *installTheme
+      - keyword: "how do i install theme"
+        response: *installTheme
+      - keyword: "how can i install theme"
+        response: *installTheme
+      - keyword: "how can i install a theme"
+        response: *installTheme
+      - keyword: "how to get a theme"
+        response: *installTheme
+      - keyword: "how to change theme"
+        response: *installTheme
+      - keyword: "how to change the theme"
+        response: *installTheme
+      - keyword: "how do I change the theme"
+        response: *installTheme
+      - keyword: "how to add a theme"
+        response: *installTheme
+      - keyword: "install theme"
+        response: *installTheme
+      - keyword: "install any theme"
+        response: *installTheme
+      - keyword: "how to add theme"
+        response: *installTheme
+      - keyword: "how to install addon"
+        response: *installTheme
+      - keyword: "how to add addon"
+        response: *installTheme
+      - keyword: "how to get addons"
+        response: *installTheme
+      - keyword: "install a theme"
+        response: *installTheme
+      - keyword: "install a panel theme"
+        response: *installTheme
+        
+      - keyword: 'defined in the "theme" namespace.'
+        response: 
+        - "&user&; There's no such command or theme system in 1.x Pterodactyl. You are trying to install a very outdated theme."
+      - keyword: "not found at path: assets/manifest.json"
+        response: 
+        - "&user&; You are attempting to run the source code and not a built release of the Panel. This is not recommended if you don't know what you are doing."  
+        
+      - keyword: "contracts\factory] does not exist"
+        response: *composer_dependency               
+        
+      - keyword: "/vendor does not exist and could not be created"
+        response: 
+        - "&user&; You do not have enough permissions. Use sudo or alternatively root. Do not worry, you will chown the files to the web server user further in the documentation."
+
+      - keyword: "job for apache2.service failed"
+        response: 
+        - "&user&; Type `sudo systemctl status apache` or `apache2ctl configtest` to find out more more information."  
+      - keyword: "job for nginx.service failed because the control process exited"
+        response: &nginxDown
+        - "&user&; Type `sudo nginx -t | nc pteropaste.com 99` or `sudo systemctl status nginx` to find out more more information." 
+      - keyword: "nginx.service: unit entered failed state"
+        response: *nginxDown
+      - keyword: "nginx.service: failed with result 'exit-code'"
+        response: *nginxDown     
+        
+ #     - keyword: "php_network_getaddresses: getaddrinfo failed: name or service not known"
+ #       response: 
+ #       - "&user&; The address you are trying to use for the connection is invalid. Double-check the connection address."          
+        
+      - keyword: "steamapi_issteamrunning() failed"
+        response:
+          - |
+            Seems like you're asking about `steamapi_issteamrunning() failed` in your logs. You can just ignore that alert as it is expected seeing as Steam does not run directly in the containers.
+            
+      - keyword: "aborting automatic restart, crash detection is disabled for this instance"
+        response:
+          - |
+            You can enable or disable crash detection in the Wings `config.yml`. This value is present in Wings 1.5.1 and newer versions.
+            
+            Wings not up to date? Update your Wings: <https://pterodactyl.io/wings/1.0/upgrading.html>
+  
+
+      - keyword: "error response from daemon: no such image:"
+        response:
+          - | 
+            &user& Your machine fails to pull the Docker image. Attempt to manually pull it on your machine to see why it fails.
+            
+            Type `docker pull <image>` replacing <image> with the one in your error.
+
+      - keyword: "iptables: no chain/target/match"
+        response: &iptablesChain
+          - "&user&; You may have modified iptables manually or even disabled/stopped it. Please restart docker (`systemctl restart docker`) to fix this, and be careful modifying iptables randomly."
+
+      - keyword: "chain 'docker' does not exist"
+        response: *iptablesChain
+
+      - keyword: "bind: cannot assign requested address"
+        response:
+          - |
+            At your service, &user&!
+
+            The IP address you have assigned to your server is not actually available for use on your machine. Node allocation creation is explained in the Wings install documentation: <https://pterodactyl.io/wings/1.0/installing.html#node-allocations>
+            
+            Execute the command `hostname -I | awk '{print $1}'` and change your Node allocations to use this IP. Yes, it can be your internal/local IP when you're behind NAT. When behind NAT you will allocate the internal IP and connect using the public IP.
+            
+            If you have added multiple public IPs to your network interface, you can view all of them using the command `ip a | grep "inet "` 
+
+      - keyword: "failed programming external connectivity on endpoint"
+        response: &bind_error
+          - |
+            At your service, &user&!
+
+            The IP address you have assigned to your server is not actually available for use on your machine, or something is already running on that port. Use `ss -plnt | grep :<port>` (replacing <port> with your own) to find what processes might be using it.
+            
+            **If you don't find any service using the port, then refer to the instructions below.**
+            
+            Execute the command `hostname -I | awk '{print $1}'` and change your Node allocations to use this IP. Yes, it can be your internal/local IP when you're behind NAT. You still have to use it as that is your network interface IP.
+            
+            If you have added multiple public IPs to your network interface, then you can view all of them using the command `ip a | grep "inet "`       
+        
+ #     - keyword: "eaddrinuse"
+ #       response: *bind_error
+      - keyword: "there is not enough available disk space to start this server"
+        response:
+          - |
+            &user&: It appears that you are out of space on your server or have reached the disk size limit for the server as defined in the settings. You can check disk usage with `df -h`.
+
+      - keyword: "sqlstate[hy000] [1698] access denied for user 'root'"
+        response: 
+        - |
+          &user&; **Do not use root user** for the connection. Follow the MySQL database guide to create a new user and database.
+          
+          <https://pterodactyl.io/tutorials/mysql_setup.html>
+
+      - keyword: "using password: no"
+        response: 
+        - |
+          &user&; You don't appear to be providing a password for your database connection. Make sure to provide one in your `.env` file or all authentication attempts will fail. Open the file and find DB_PASSWORD variable, do not add a new one. Remember to enclose it in double quotes such as `DB_PASSWORD="mypassword"`
+          
+          You can open it directly with `nano /var/www/pterodactyl/.env`. Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear`
+
+      - keyword: "connection refused (sql"
+        response: &mysql_error
+          - |
+            🇫🇷 🥖 Bienvenue sur Internet, &user& 🥖 🇫🇷
+
+            Your database is refusing the Panel's attempts to connect to it. This can be for a number of different reasons so I'll let a human double check, but here are some ideas.
+
+            1. Is your MySQL instance running? `systemctl status mysql`(hopefully not down the road) 
+            2. Is the user you're trying to connect with authorized to access the given database from this IP address?
+            3. Did you correctly give that user permission to even access that database?
+            4. Do you have a Firewall that is blocking connections?
+            5. Is your MySQL instance bound to `127.0.0.1` or `localhost` and you're trying to connect from outside the server?
+            6. Does the user have `GRANT` permissions if you're trying to use them to create a new database for a server?
+            7. Have special characters in your password? Make sure DB_PASSWORD in your .env file is enclosed in double quotes
+
+            Here is some additional documentation to help you out: <https://pterodactyl.io/tutorials/mysql_setup.html>
+
+      - keyword: "syntax error or access violation: 1044"
+        response: *mysql_error
+      - keyword: "[hy000][2002] connection refused"
+        response: *mysql_error    
+      - keyword: "[hy000] [2002] connection refused"
+        response: *mysql_error           
+      - keyword: "[1045] access denied for user"
+        response: *mysql_error
+          
+      - keyword: '[hy000] [2002] connection timed out'
+        response: 
+        - |
+          &user&; Your database connection is timing out. Make sure to use the correct connection address and that the firewall is not blocking the port (default port is 3306).
+          
+          Don't forget to allow external access to the database: <https://pterodactyl.io/tutorials/mysql_setup.html#allowing-external-database-access>
+          
+      - keyword: "sqlstate[hy000] [1698] access denied"
+        response: 
+        - |
+          &user&; Your database user does not have the required permissions. Follow the MySQL database guide to create a new user and database with the correct permissions.
+          
+          <https://pterodactyl.io/tutorials/mysql_setup.html>          
+
+      - keyword: "curl error 60: ssl certificate problem: unable to get local issuer certificate"
+        response: &cacert
+          - |
+            Interesting, &user&. We have to add a `cacert.pem` file to your `php.ini` configuration. To do this, please download the latest bundle with `curl -o cacert.pem -L https://curl.haxx.se/ca/cacert.pem`
+
+            Then, update your `php.ini` file to include the following before restarting PHP (and potentially your webserver). Don't forget to replace the path to your cacert file.
+            ```
+            curl.cainfo = '/example/path/to/cacert.pem/'
+            ```
+            Type `php -i | grep 'php.ini'` to find the location of your php.ini file.
+
+      - keyword: "curl error 77: error setting certificate verify locations"
+        response: *cacert
+            
+      - keyword: "call to undefined function pterodactyl\console\commands\posix_getpwuid()"
+        response:
+          - |
+            &user& You are missing PHP posix extension to detect file ownership in the automated upgrade process. Please install and enable it and try again or use the manual upgrade documentation.
+
+          
+      - keyword: "client sent auth, but no password is set"
+        response: &redis_auth
+          - |
+            &user&; You've set a password for Redis in the panel setup process, but there isn't one required for your Redis instance. To solve this issue, open your dotenv file, locate REDIS_PASSWORD and set it to `REDIS_PASSWORD=null`.
+            
+            You can open dotenv file directly with `nano /var/www/pterodactyl/.env`. Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear`
+            
+      - keyword: "<password> called without any password configured"
+        response: *redis_auth
+
+      - keyword: "doctrine\deprecations\deprecation"
+        response:
+          - "Perform the Panel update process again to resolve the `class deprecation not found` error."
+
+      - keyword: "unit file redis.service does not exist"
+        response:
+          - "&user& You have not installed Redis or for your instance it is `redis-server` and not `redis`."  
+
+      - keyword: "error while reading line from the server. [tcp"
+        response: 
+          - |
+            &user&; Your Redis is timing out while trying to write. Usually, this is a network issue, because local Redis instance shouldn't timeout while writing.
+
+            In rare occasions, you might have very old Redis version with a low timeout setting, which you can modify in Redis.conf. By default, it would be 0 (300 seconds of idle).
+
+      - keyword: 'failed: wrongpass invalid username-password pair or user is disabled. [tcp://localhost:6379]'
+        response: 
+          - |
+            &user&; You've configured your Redis instance to have a password and are not providing one. By default, Redis does not have a password requirement as it only is available locally.
+
+            Should you wish to require authentication for Redis, please provide the Redis credentials in the dotenv file variable `REDIS_PASSWORD=`. It already should exist in the file. You can open it directly with `nano /var/www/pterodactyl/.env`.
+            
+            Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear` 
+
+      - keyword: 'predis\connection\connectionexception'
+        response: &redis_error
+          - |
+            &user&; This is generally a Redis issue, commonly caused by Redis not running. Check the status with `systemctl status redis`
+
+            If you are running on a machine that utilizes SELinux, please check out our troubleshooting guide for steps to solve this problem: <https://pterodactyl.io/panel/1.0/troubleshooting.html#selinux-issues>
+
+      - keyword: "noauth authentication required"
+        response:
+          - |   
+            &user&; You have configured your Redis instance to require a password and are not providing one. Add your redis password in the `.env` hidden file located at `/var/www/pterodactyl` and try again or disable.
+            
+            You can open it directly with `nano /var/www/pterodactyl/.env`. Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear`
+            
+      - keyword: "allocation id field is required"
+        response:
+          - |   
+            &user&; Please navigate back to the Wings installation documentation and focus on the allocation creation step.
+            
+            <https://pterodactyl.io/wings/1.0/installing.html#node-allocations>
+          
+      - keyword: "an unexpected error was encountered while processing this request, please try again. (http/500)"
+        response:
+          - | &user&; Your Panel is returning error messages to Wings. Make sure that Panel is running and can be reached. Generate Panel logs and post the link to find out more
+            ```
+            tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99
+            ```
+
+      - keyword: "predis\\connection\\connectionexception"
+        response: *redis_error
+        
+      - keyword: "connection refused [tcp://localhost:6379]"
+        response: *redis_error
+      - keyword: "connection refused [tcp://127.0.0.1:6379]"
+        response: *redis_error  
+        
+      - keyword: "temporary failure in name resolution [tcp://"
+        response: 
+          - |   
+            &user&; The Redis host you typed is invalid or unreachable. By default Redis should be hosted on the same machine and host set to `127.0.0.1` or `localhost`.
+            
+            Change your REDIS_HOST in the hidden `.env` file found at `/var/www/pterodactyl`.You can open it directly with `nano /var/www/pterodactyl/.env`
+            Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear`
+       
+      - keyword: "deactivate the recaptcha"
+        response: &disable_recaptcha
+          - "&user&; You can disable recaptcha by following our guide <https://pterodactyl.io/panel/1.0/additional_configuration.html#disabling-recaptcha>"
+          
+      - keyword: "disable recaptcha"
+        response: *disable_recaptcha  
+        
+      - keyword: "turn off recaptcha"
+        response: *disable_recaptcha        
+        
+      - keyword: "deactivate recaptcha"
+        response: *disable_recaptcha     
+        
+      - keyword: "this site key is not enabled for the invisible captcha."
+        response:
+          - "&user&; You can disable recaptcha by following our guide <https://pterodactyl.io/panel/1.0/additional_configuration.html#disabling-recaptcha>"
+          - "After that, replace your keys on the admin panel settings and enable it again."
+            
+      - keyword: "server sent charset (0) unknown to the client"
+        response:
+          - "&user&; Change `character-set-collations` in `/etc/mysql/mariadb.conf.d/50-server.cnf` to `utf8mb4=utf8mb4_general_ci`."
+          - "Restart mariadb after changing the config file."
+         
+      # - keyword: "repository does not exist or may require 'docker login'"
+      #   response: &docker_pull_denied
+      #     - |
+      #       The Docker image you are trying to pull either requires authentication or doesn't exist.
+
+      #       Please see the following article for more information: <https://pterodactyl.io/daemon/0.6/configuration.html#private-registries>
+      # - keyword: "pull access denied for on"
+      #   response: *docker_pull_denied
+      - keyword: "413 request entity too large"
+        response:
+          - "&user&; It looks like you're using Contabo's object storage which has a very low file size limit.  Use any other S3 provider, Contabo will not work."
+      - keyword: "work on windows"
+        response: &run_windows
+          - |
+            Let's clear some stuff up since it appears we're discussing running on Windows/WSL.
+
+            1.) The _Panel_ will run fine on a Windows machine. You'll need to figure out how to get it running, we do not offer any support.
+            2.) Wings **will not** run on Windows. Panel is useless without Wings.
+
+            In all, we do not recommend trying to run any of this software on Windows, you'll be completely on your own. There is no support provided for Windows.
+
+            Please see the following for our currently supported systems: <https://pterodactyl.io/wings/installing.html#supported-systems>
+  
+      - keyword: "install on windows"
+        response: *run_windows
+      - keyword: "windows server"
+        response: *run_windows
+      - keyword: "pterodactyl on windows"
+        response: *run_windows     
+      - keyword: "panel in windows"
+        response: *run_windows  
+      - keyword: "windows pc"
+        response: *run_windows           
+      - keyword: "pterodactyl in windows"
+        response: *run_windows
+      - keyword: "run on windows"
+        response: *run_windows 
+      - keyword: "run in windows"
+        response: *run_windows      
+      - keyword: "pterodactyl in wsl"
+        response: *run_windows        
+
+      - keyword: "offsetexists($key) should either be compatible with arrayaccess::offsetexists(mixed $offset)"
+        response: 
+          - "&user&; You appear to be using PHP 8.1, which is currently not supported for your Panel version. Please update your Panel to 1.8 or newer version."
+          - "<https://pterodactyl.io/panel/1.0/updating.html>"
+          
+      - keyword: "unknown column 'uuid' in"
+        response: 
+          - "&user&; Please update your Panel to v1.11.3 or newer version resolve the unknown uuid column issue."
+          - "<https://pterodactyl.io/panel/1.0/updating.html>"
+
+      - keyword: "state is 0x202 after update job"
+        response: &nodisk_space
+          - "You are out of disk space. Make sure enough space is allocated and available to the server."
+          - "You can check your machine disk space by typing the command `df -h`"
+
+      - keyword: "failed to connect to bus: host is down"
+        response:   
+          - "&user&; You are missing systemd from your system, or something has gone wrong with it, preventing you from installing this Panel. Should you be using WSL, be aware that Windows, including WSL, is not supported."    
+
+      - keyword: "wings.service not found"
+        response: &wings_missing       
+          - "&user&; You did not daemonize and create the Wings service file as instructed here <https://pterodactyl.io/wings/1.0/installing.html#daemonizing-using-systemd>"            
+            
+      - keyword: "wings.service could not be found"
+        response: *wings_missing
+      - keyword: "wings.service does not exist"
+        response: *wings_missing
+        
+      - keyword: "the json file provided is not in a format that can be recognized"
+        response:
+          - "Your egg file is invalid or your panel is out of date and doesn't support PTDL_V2 egg formats introduced in Panel version 1.8.0"
+          - "**Panel update guide:** <https://pterodactyl.io/panel/1.0/updating.html>"
+
+      - keyword: "no such container"
+        response:
+          - |
+            Hi &user&. The Docker image you are attempting to use is invalid and does not exist.
+
+            **This is not a bug with Pterodactyl.** Please ask the maintainer about this, and double check for any typos.
+
+      - keyword: "restart the daemon"
+        response: &restart_daemon_command
+          - |
+            Simple! 😘
+
+            ```
+            systemctl restart wings
+            ```
+
+      - keyword: "restart my daemon"
+        response: *restart_daemon_command
+      - keyword: "restart wings"
+        response: *restart_daemon_command
+      - keyword: "wings restart"
+        response: *restart_daemon_command
+      - keyword: "how to restart daemon"
+        response: *restart_daemon_command
+
+      - keyword: "error: getaddrinfo enotfound"
+        response:
+          - |
+            Greetings? More like YEETINGS, amirite?! 👻
+
+            Anyways, &user&, it looks like your DNS hasn't fully resolved so your Wings and Panel (or your browser) are having some trouble finding eachother. Saddest love story since Finding Nemo...
+
+            You'll need to wait for your DNS to finish propagating, which you can confirm by running the following command on your computer, or whatever server is having issues connecting.
+
+            ```
+            dig your-panel.com NS
+            ```
+
+      - keyword: "expecting variable (t_variable)"
+        response:
+          - |
+            Looks like you're not running PHP 7.4 or higher.
+
+            Please check your PHP version with `php -v`, if that shows PHP 7.3 please check your installed packages. For more info please type `.php check` and I will respond with more information.
+
+      - keyword: "cannot read property of split"
+        response:
+          - |
+            Looks like you have an egg that has gone rotten. 🥚
+
+            You'll need to update it to the latest version as it is currently attempting to read from a file location that does not exist, and Dane never wrote good error handling so now I'm having to tell you this rather than it just solving itself like a good program should... sheesh.
+            
+            
+      - keyword: "connection timed out after 10001 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for http"
+        response: &natReflection
+          - |
+            &user&; It looks like the Panel or Wings is responding too slowly, causing the request to timeout. Usually, this indicates some sort of a network issue.
+
+            Should the panel and wings be located on the same network, you might experience NAT reflection issues. In that case, type `.nat` for more information.
+            
+      - keyword: "context deadline exceeded"
+        response: *natReflection
+      - keyword: "connection timed out after 10000 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for http"
+        response: *natReflection
+      - keyword: "resolving timed out after 10000 milliseconds (see https://curl.haxx.se/libcurl/c/libcurl-errors.html) for http"
+        response: *natReflection
+            
+      - keyword: "unable to locate package php8.0"
+        response:
+          - |
+            &user&; You are missing the source repository for PHP that would be added in the dependency step. Please navigate back to the documentation and do not skip any steps.
+
+            **Install Guides:**
+            - Ubuntu: <https://pterodactyl.io/panel/1.0/getting_started.html>
+            - Debian: <https://pterodactyl.io/community/installation-guides/panel/debian10.html>
+            - CentOS/Alma/Rocky: <https://pterodactyl.io/community/installation-guides/panel/centos8.html>
+
+      - keyword: "not found. in"
+        response:
+          - |
+            You are either using a custom Pterodactyl theme with missing files, or have removed necessary application view files from the default theme.
+
+      - keyword: "alwayspretouch"
+        response:
+          - |
+            Do not use the `AlwaysPreTouch` Aikar flag as it will preallocate all the memory and starve the container causing it to freeze or crash. Aikar's website warns of this.
+            
+            Remove the flag or lower the Xmx to have overhead for the container, for example, with `-Xmx$(({{SERVER_MEMORY}}-512))M`
+
+      - keyword: "where are server files"
+        response: &server_files
+          - "Your server files are stored in `/var/lib/pterodactyl/volumes/` by default. You can view and change the path in `/etc/pterodactyl/config.yml`."
+          
+      - keyword: "where is the server data"
+        response: *server_files
+      - keyword: "where are the game server files"
+        response: *server_files
+      - keyword: "where are server files"
+        response: *server_files      
+      - keyword: "where are containers"
+        response: *server_files      
+      - keyword: "where are volumes"
+        response: *server_files              
+        
+      - keyword: "how to donate"
+        response: &how_donate
+          - "One-time donations and monthly sponsors are welcome through Github here <https://github.com/sponsors/matthewpi>"
+          - ""
+          - "There are 3 levels of donor. All levels get access to the not so secret donor channel."
+          - "The levels for donations are:"
+          - "Donor I - $5"
+          - "Donor II - $20"
+          - "Donor III - $50"
+          
+      - keyword: "where to donate"
+        response: *how_donate               
+          
+      - keyword: "setup pterodactyl"
+        response: &setup_ptero
+          - "If you want to install Pterodactyl Panel, please have a look at our documentation: <https://pterodactyl.io/panel/getting_started.html>"  
+          
+      - keyword: "help install pterodactyl"
+        response: *setup_ptero          
+      - keyword: "help to install pterodactyl"
+        response: *setup_ptero    
+      - keyword: "help to install panel"
+        response: *setup_ptero 
+      - keyword: "how to install panel"
+        response: *setup_ptero
+      - keyword: "how do i install the panel"
+        response: *setup_ptero
+      - keyword: "how do i install panel"
+        response: *setup_ptero
+      - keyword: "how to install the panel"
+        response: *setup_ptero
+      - keyword: "how to install panel"
+        response: *setup_ptero
+          
+      - keyword: ".env file"
+        response: &env_file
+          - "The env file can be found at `/var/www/pterodactyl/.env`. Files starting with a `.` in Linux are hidden so it may not show up in file browsers by default. You can open it directly with `nano /var/www/pterodactyl/.env`"
+
+      - keyword: "key provided is shorter than 256 bits, only 160 bits provided"
+        response: 
+          - "&user& New JWT dependency requirements for the key size have changed. Please reset your Node daemon master key from the Node settings tab on the admin Panel. You might have to manually overwrite the Wings `config.yml` file when Panel can't reach Wings."  
+          
+      - keyword: "env file"
+        response: *env_file   
+      - keyword: "where is env file"
+        response: *env_file          
+      - keyword: "there is no env file"
+        response: *env_file          
+      - keyword: "there is no file .env"
+        response: *env_file          
+      - keyword: "there is no file env"
+        response: *env_file    
+      - keyword: "how to open env"
+        response: *env_file    
+      - keyword: "where env file"
+        response: *env_file            
+          
+      - keyword: "how to install panel"
+        response: *setup_ptero       
+
+      - keyword: "pteroq.service does not exist"
+        response: &pteroqMissing
+          - "No need to rush &user&! It appears that you skipped a step during your installation and didn't create a queue worker service file as instructed here <https://pterodactyl.io/panel/1.0/getting_started.html#queue-listeners>"    
+
+      - keyword: "failed to start pterodactyl queue worker"
+        response: &pteroq_crash
+          - "&user&; You'll need to grab error logs from your Panel to figure out why the queue worker is crashing. ```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```"      
+          
+      - keyword: "pteroq.service: start request repeated too quickly."
+        response: *pteroq_crash
+          
+      - keyword: "err_too_many_redirects"
+        response: &toomany_redirects
+          - "&user&; Your website appears to be stuck in a redirect loop from HTTP to HTTPS. Usually, this happens when using Cloudflare and having SSL settings on flexible. In that case, change the Cloudflare SSL settings to full."   
+          
+      - keyword: "redirected you too many times"
+        response: *toomany_redirects             
+          
+      - keyword: "how to update java"
+        response: &change_java
+          - | 
+           Java version and all other dependencies are determined by the used Docker image which you can change in the startup tab.
+           
+           Here is a guide on how to add new images <https://discord.com/channels/122900397965705216/404105683336953866/786906574622031872>
+           
+           You can ask for more help with images and eggs at <#404105683336953866>        
+
+      - keyword: "restart pteroq"
+        response: &restart_pteroq_command
+          - |
+            Easy!
+
+            ```
+            systemctl restart pteroq
+            ```
+      - keyword: "restart the pteroq"
+        response: *restart_pteroq_command   
+
+      - keyword: "how to change java"
+        response: *change_java      
+      - keyword: "how to add java 17"
+        response: *change_java          
+      - keyword: "java 17 egg"
+        response: *change_java          
+      - keyword: "how to install java 17"
+        response: *change_java          
+      - keyword: "how to install java-17"
+        response: *change_java            
+      - keyword: "how to get java 17"
+        response: *change_java         
+      - keyword: "how to get java17"
+        response: *change_java   
+      - keyword: "java 17 for 1.18"
+        response: *change_java          
+      - keyword: "java runtime (class file version 60.0), this version of the java runtime only recognizes"
+        response: &need_java16
+          - |    
+           &user&; Your Minecraft version requires Java 17. Here is a guide on how to add new images <https://discord.com/channels/122900397965705216/404105683336953866/786906574622031872>
+           
+           You can ask for more help with images and eggs at <#404105683336953866>       
+           
+      - keyword: "an exceptioncaught() event was fired, and it reached at the tail of the pipeline"
+        response: 
+          - |    
+           &user& Your Minecraft version requires older Java version than what you are currently using. Go to the startup tab, change the docker image to `core:java` or `yolks:java_8` for Java 8 and restart the server.
+           
+           You can ask for more help with images and eggs at <#404105683336953866>                    
+
+      - keyword: "the server with java 17 or above"
+        response: *change_java   
+
+      - keyword: "too many redirects"
+        response: *toomany_redirects
+      - keyword: "stopped after 10 redirects"
+        response: *toomany_redirects          
+
+      - keyword: "how to install wings"
+        response: &setup_wings
+          - "&user&; If you want to install Wings, please have a look at our documentation: <https://pterodactyl.io/wings/1.0/installing.html>" 
+          - "Keep in mind that you must have the Panel already installed."
+      - keyword: "how to add nodes"
+        response: &setup_wings
+          - "&user&; Follow the Wings install documentation for each new Node you'd like to add: <https://pterodactyl.io/wings/1.0/installing.html>" 
+          
+      - keyword: "auto-allocation is not enabled for this instance"
+        response:
+          - "Sheeesh &user&! You need to enable automatic allocation creation by going to admin panel -> Settings -> Advanced."  
+          
+      - keyword: "pdoconnection::query() must be compatibe with pdo"
+        response:
+          - "&user&! You have an old panel version that doesn't support PHP 8. Should you be upgrading the panel, then ignore the artisan up/down commands for this time."
+          
+      - keyword: " must be of type array, bool given"
+        response:
+          - "&user&! You are using a PHP version that's not currently supported by the Panel or your current Panel version is too old. Should you be upgrading the Panel from a very old version to the latest version that supports your current PHP version (listed in the documentation), then ignore the artisan up/down commands for this time."
+          
+      - keyword: "service unavailable"
+        response:
+          - "&user&! Your Panel appears to be in maintenance mode should you receive `503 service unavailable` errors. Should you be performing a Panel update, please return back to the documentation and do it again, since you've missed steps."
+          - ""
+          - "Otherwise, you can type `php artisan up` in the web root directory, by default at `/var/www/pterodactyl`."
+          
+      - keyword: "endpoints must be full uris and include a scheme and host at /var/www/pterodactyl/vendor/aws"
+        response:
+          - "&user&; Your S3 `AWS_ENDPOINT` in the `.env` file is missing HTTP or HTTPS protocol from the beginning of the URL."            
+          
+      - keyword: "redis is configured to save rdb snapshots, but it is currently not able to persist on disk"
+        response: &redis_dump
+        - |
+           Sheeesh &user&! Redis is unable to dump the snapshots to your disk! Common causes for this:
+           
+           - Not enough disk space or memory
+           - Redis not having proper write permissions
+           
+            You can type `df -h` to view your current disk space and `free -m` for memory. Redis logs would be able to tell you more about why it's failing to save. 
+          
+      - keyword: "redis is configured to save rdb snapshots, but it's currently unable to persist to disk"
+        response: *redis_dump
+          
+      - keyword: "if you see this page, the nginx web server is successfully installed and working. further configuration is required."
+        response: &read_web_docs
+        - |
+           **Welcome to Pterodactyl!**
+        
+           If you see this page, then you have not read and followed our documentation. Further steps are required.
+           
+           For online documentation and support please refer to pterodactyl.io
+           Web server configuration is available at <https://pterodactyl.io/panel/1.0/webserver_configuration.html>
+           
+           Thank you for using Pterodactyl.
+           
+      - keyword: "welcome to nginx"
+        response: *read_web_docs
+          
+      - keyword: "no 'access-control-allow-origin' header is present"
+        response:
+          - "&user&; Make sure that your Wings are running and reachable. This error usually happens when your browser can't reach Wings to verify the CORS headers. Click on the URL in the CORS error to verify it can be connected to without any errors."          
+         
+      - keyword: "has been blocked by cors policy: response to preflight request doesn't pass"
+        response: &cors_issue
+          - |
+            &user& Your Panel remote URL in the Wings `config.yml` does not match with the URL from which you're making the request. Make sure that they match for the connection to work.
+            
+            
+            If you know what you are doing and are intentionally trying to use a different origin, make sure to add it to your Wings `config.yml` allowed origins as shown in the example below. Use correct HTTP or HTTPS scheme. Wildcard `'*'` can be used to allow all origins. 
+            ```
+            allowed_origins:
+            - https://test.source.com
+            - http://another.panel.com
+            ```
+            
+            Restart Wings `systemctl restart wings` to apply the change.
+
+      - keyword: "has been blocked by cors policy: the 'access-control-allow-origin' header"
+        response: *cors_issue
+
+      - keyword: "blocked: the same origin policy disallows reading the remote resource at"
+        response:
+          - "&user&; Make sure that your Wings are running and reachable. This error usually happens when your browser can't reach Wings to verify the CORS headers. Click on the URL in the CORS error to verify it can be connected to without any errors."             
+          
+      - keyword: "request origin not allowed by upgrader.checkorigin"
+        response:
+          - |
+            &user& Your Panel remote URL in the Wings `config.yml` does not match with the URL from which you're making the request. Ignore the error if this is not you doing it.
+            
+            If you know what you are doing and are intentionally trying to use a different origin such as when using API for websocket connection, make sure to add it to your Wings `config.yml` allowed origins as shown in the example below. Ue correct HTTP or HTTPS scheme. Wildcard `'*'` can be used to allow all origins. 
+            ```
+            allowed_origins:
+            - https://test.source.com
+            - http://another.panel.com
+            ```
+            
+            Restart Wings `systemctl restart wings` to apply the change.
+          
+      - keyword: "your composer dependencies require a php version"
+        response:
+          - "Hey &user&! PHP 7.4 or newer is required for Pterodactyl 1.3+. Please follow this guide to upgrade your PHP and composer version: <https://pterodactyl.io/guides/php_upgrade.html>"
+          
+      - keyword: "invalid command 'php_value', perhaps misspelled or defined by a module"
+        response:
+          - "Hey &user&! Make sure you have the libapache2-mod-php package installed and enabled for Apache or PHP will not display on your webserver as warned in the documentation."          
+          
+      - keyword: "network error"
+        response: &getPanelLogs
+          - "&user&; You'll need to grab the error logs from the Panel. The following command uploads the last 150 lines of this day's log to our pastebin and provides a link you can share."
+          - "```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```"
+          
+      - keyword: "an unexpected error was encountered while processing this request, please try again."
+        response: *getPanelLogs  
+          
+      - keyword: "this cache store does not support tagging"
+        response:
+          - "&user&; The configured Cache Driver is not supported, change the `CACHE_DRIVER=` to `redis`in your `.env` file located at `/var/www/pterodactyl/.env`. memcached can also be used, but would require you to install it first."
+          
+      - keyword: "missing bc math or gmp extension"
+        response: &php_extensions
+          - |
+            &user&; You appear to be missing PHP extensions that are listed in the documentation dependencies list. They should have been installed if you followed the documentation.
+            
+            Worry not, follow the PHP upgrade guide to install the required extensions for PHP 8.1 <https://pterodactyl.io/guides/php_upgrade.html>
+            
+      - keyword: "pdoexception(code: 0): could not find driver at"
+        response: *php_extensions
+      - keyword: 'class "pdo" not found'
+        response: *php_extensions
+      - keyword: 'queryexception: could not find driver'
+        response: *php_extensions
+      - keyword: 'production.error: could not find driver'
+        response: *php_extensions
+      - keyword: "class 'pdo' not found"
+        response: *php_extensions
+      - keyword: 'class "domdocument" not found'
+        response: *php_extensions
+      - keyword: 'class domdocument not found'
+        response: *php_extensions
+      - keyword: "database: could not find driver"
+        response: *php_extensions
+      - keyword: "could not find driver (sql"
+        response: *php_extensions
+      - keyword: "call to undefined function illuminate\\support\\mb_strimwidth()"
+        response: *php_extensions        
+          
+      - keyword: "blank page"
+        response: &blank_page
+          - |
+            &user&; Blank white page on the client UI indicates React failing to render the view. This can be caused by wrong file permissions or mistakes in the code from modifications.
+            
+            Worry not, follow the Panel upgrade guide to replace your files with the default ones and set the required permissions <https://pterodactyl.io/panel/1.0/updating.html>
+            
+          
+      - keyword: "white page"
+        response: *blank_page
+      - keyword: "white screen"
+        response: *blank_page
+      - keyword: "panel is blank"
+        response: *blank_page
+          
+      - keyword: "[1040] too many connections"
+        response:
+          - |
+            &user&; Your database has reached the limit of maximum concurrent connections (150). You can increase the limit to 300 (or any number) by adding the following text to the bottom of your `my.cnf` file
+            ```
+            [mysqld]
+            max_connections=300
+            ```
+            Type `find /etc -iname my.cnf` to find the location of the file. Restart your mysql `systemctl restart mysql` to apply the changes and voilà!
+            
+      - keyword: "schedules not working"
+        response: &pteroq_broken
+          - |
+            &user& Issues with automated tasks?
+            
+            Make sure the queue worker is running with `systemctl status pteroq`
+            Restart the worker should it already be running to kick it back to work using `systemctl restart pteroq`
+
+            When neither work, make sure that you also created a crontab for your pteroq worker <https://pterodactyl.io/panel/1.0/getting_started.html#crontab-configuration>      
+            
+      - keyword: "schedules stuck"
+        response: *pteroq_broken
+      - keyword: "schedule not running"
+        response: *pteroq_broken  
+      - keyword: "schedules get stuck"
+        response: *pteroq_broken        
+      - keyword: "schedules processing"
+        response: *pteroq_broken      
+      - keyword: "schedules stuck"
+        response: *pteroq_broken
+      - keyword: "schedules gets stuck"
+        response: *pteroq_broken             
+            
+      - keyword: "backups cannot be created for this server"
+        response:
+          - "&user&; Backup Limit must be greater than 0 to allow the creation of backups. You can change the limit in the server Build Configuration when viewing it on the admin Panel"
+          
+      - keyword: 'the "--" option does not exist'
+        response:
+          - "&user&; Run`composer self-update` first and after that try again `composer self-update --2`"           
+          
+      - keyword: '"self-update" is not defined'
+        response: &outdatedComposer
+          - "&user&; Pterodactyl isn't the only dinosaur here! You have a very old buggy version of Composer. Reinstall it to fix your issue."
+          
+      - keyword: "self-update is not defined"
+        response: *outdatedComposer
+          
+      - keyword: "call to undefined method illuminate\cache\ratelimiting\limit::perminutes()"
+        response:
+          - "&user&; Make sure that your composer version is 2+ by running `composer --version`. After that, run `composer install --no-dev --optimize-autoloader` again in your Panel install path and post any errors you might encounter during this process."
+          
+      - keyword: "array_merge() does not accept unknown named parameters in"
+        response:
+          - "&user&; Composer +2 is required. Please read our guide to update it: <https://pterodactyl.io/guides/php_upgrade.html> "           
+          
+          
+      - keyword: "the fqdn or ip address provided does not resolve to a valid ip"
+        response: 
+          - |
+            Howdy &user&! Double-check your FQDN and DNS record. It must point towards your machine IP, modifying existing DNS records might take some time to propagate. This can be sped up by flushing your machine DNS cache or changing nameservers.
+            
+            You can ping the domain from your Panel machine to rule out DNS cache `ping yourdomain.com`. The site <https://dnschecker.org/> can be used to verify that there are valid DNS records for the domain.
+
+      - keyword: "could not choose appropriate plugin: the nginx plugin is not working"
+        response:
+          - "&user&; Try using the standalone certbot method. Replace the example domain with your own ```certbot certonly --standalone -d example.com```"    
+          
+      - keyword: "certificate is not yet valid"
+        response: &certificate_time
+          - " &user&; Your certificate has expired or is not yet valid because your machine time is wrong." 
+          - "You can sync your time with the command `timedatectl set-ntp true`"
+          - "View our guide about generating SSL certificates <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>"
+          
+      - keyword: "certificate has expired or is not yet valid"
+        response: *certificate_time          
+          
+      - keyword: "certificate has expired"
+        response: &cert_expired
+          - |
+            Howdy &user&! It looks like your SSL certificate has probably expired which is causing you some issues. Please double check that it is up-to-date and renew it if needed by following our guide <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>
+
+            Additionally, not every service is able to automatically apply an updated certificate so you may need to restart Wings, NGINX, or Apache so that they will begin using the updated certificate.
+
+      - keyword: "err_cert_date_invalid"
+        response: *cert_expired
+        
+      - keyword: "tls: expired certificate"
+        response: *cert_expired        
+
+      #- keyword: "econnrefused"
+      #  response:
+      #    - |
+      #      It looks like your Wings is having some trouble connecting to your Panel &user&. You'll need to wait for a human to get a little more specific guidance on this matter.
+
+      #      In the mean time, have you recently made changes to your DNS? If so, you'll probably need to wait a little bit for those changes to propagate. You can run the following command on your machine to see if the DNS has propagated or not:
+
+      #      ```
+      #      dig your-domain.com ALL
+      #      ```
+      #
+      #      Additionally, if you've made any Firewall changes you may have unintentionally blocked network access either in-to or out-of your machine. The Panel and Wings need ports `80`, `443`, `2022`, `8080`, and/or `8443` to operate.
+
+      - keyword: "the author must be a valid email address"
+        response:
+          - |
+            Buen dia &user&! It looks like you have an invalid "Service Author" set for your Panel. Please open your `.env` file in the root directory for the Panel, and ensure that `APP_SERVICE_AUTHOR=` has your email address set.
+            
+            You can open it directly with `nano /var/www/pterodactyl/.env`. Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear`
+
+      - keyword: "/var/run/docker.sock"
+        response:
+          - |
+            &user&: It looks like Docker probably is not running on your machine. Use `systemctl status docker` to check the status of it, and `systemctl restart docker` to get it operational again.
+
+      - keyword: "://localhost/api/remote/servers"
+        response: &local_host
+          - |
+            Het is een geweldige dag, nietwaar, &user&? It looks like you have set your Panel's `APP_URL` environment variable to be `localhost`, or just forgot to change it.
+
+            No worries though, this is a simple fix. Just open `.env` and look for `APP_URL=http://localhost`. Change that value to be your domain or IP address, such as `APP_URL=https://pterodactyl.io`. After that, find your Node configuration in the Panel, and copy the updated configuration to Wings.
+            
+      - keyword: "unrecognised compile-time option bit(s) at offset 0"
+        response:
+          - |
+            &user& This is a current upstream issue with PCRE Library. Please read the links below for more information and possible solutions:
+
+            <https://github.com/oerdnj/deb.sury.org/issues/1682> and <https://github.com/composer/composer/issues/10294>
+            
+      - keyword: "//127.0.0.1/api/remote/server"
+        response: *local_host            
+          
+      - keyword: "errorexception: unknown or bad timezone"
+        response: &badTimezone
+          - "&user&; It looks like your timezone is incorrect. Please check <http://php.net/manual/en/timezones.php> to find the correct timezone to use and change it in the `.env` file."
+          - ""
+          - "You can open it directly with `nano /var/www/pterodactyl/.env`. Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear`"
+          
+      - keyword: "errorexception: unknown or bad timezone"
+        response: *badTimezone         
+      - keyword: "unknown or bad timezone"
+        response: *badTimezone            
+
+      - keyword: "failed: port is already allocated"
+        response: *bind_error
+        
+      - keyword: "base table or view already exists"
+        response:
+          - "Your database migration was interrupted or failed. You may attempt to complete it by running `php artisan migrate --seed --force` in the Pterodactyl install directory.. However, if that still fails, then you may need to delete your database and re-create it using `php artisan migrate:fresh --seed`"
+          
+      - keyword: "base table or view not found"
+        response:
+          - "&user&; Your database migration was skipped or failed. You may attempt to complete it by running `php artisan migrate --seed --force`  in the Pterodactyl install directory. If you encounter errors, please do not ignore them and instead post them here."          
+          
+      - keyword: "net::err_ssl_protocol_error"
+        response: &ssl_protocol
+          - |
+           &user& You don't have HTTPS enabled or are missing the SSL certificate that would be generated by following our guide: <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>
+          
+           When using Cloudflare proxy for your Wings FQDN, the Node/Wings Port should be set to 8443, which is a HTTPS Port on Cloudflare. The default Wings port 8080 is HTTP only on Cloudflare and, as such, will cause SSL protocol errors. Make sure to have Node settings set to "not behind proxy" when using full SSL settings.
+
+      - keyword: "ssl_error_rx_record_too_long"
+        response: *ssl_protocol 
+      - keyword: "ssl_protocol_error"
+        response: *ssl_protocol        
+
+      - keyword: "could not connect to a default or fallback server"
+        response:
+          - "&user&; If you are configuring a minecraft network, please read our guide: <https://pterodactyl.io/community/games/minecraft.html#network-configuration>"
+          
+      - keyword: "502 bad gateway"
+        response:
+          - |
+           You will normally see 502 bad gateway error when `php-fpm` can't be reached by your web server. This can be due to a wrong path, it not running or wrong permissions. Confirm that it is running and using the correct php-fpm version in the config `pterodactyl.conf` file. It would be attempting to use PHP 8.1 by default. When using other PHP versions, make sure to change the `php-fpm` version in your config to match your used PHP version.
+          
+           Not sure where to find the server block file? Type `.webconf` and I will respond with more instructions. Web server error logs can provide additional details.
+          
+
+      - keyword: "configuration file: yaml: unmarshal errors"
+        response: &invalid_yaml
+          - "Your Wings configuration YAML file appears to have a mistake in it. Please remake it by copying and overwriting it from the panel Node configurations tab or resolve the issues to make it a valid YAML file."
+
+      - keyword: "yaml: mapping values are not allowed in this context"
+        response: *invalid_yaml    
+
+      - keyword: "requested cpus are not available - requested"
+        response:
+          - |
+            &user& You have pinned CPUs that are not available on your system. Remove or correct the CPU pinning for your server and try again.
+
+            Go to admin Panel -> Servers -> {your server} -> Build Configuration and fix the CPU pinning.                  
+          
+      - keyword: 'api docs'
+        response:
+          - "You can view the API documentation here: <https://dashflo.net/docs/api/pterodactyl/v1/>"          
+          
+      - keyword: "500 server error"
+        response: &500_error
+          - "Hey &user&! Post your Panel logs to find out more information about the cause of your 500 server errors ```tail -n 150 /var/www/pterodactyl/storage/logs/laravel-$(date +%F).log | nc pteropaste.com 99```"   
+          
+      - keyword: "500 | server error"
+        response: *500_error
+        
+      - keyword: "server error 500"
+        response: *500_error
+        
+      - keyword: "an unexpected error was encountered while processing this request, please try again.(http/500)"
+        response: *500_error          
+          
+      - keyword: "failed to open stream: permission denied"
+        response: &wrong_permissions
+          - "Your Panel file permissions are incorrect. You skipped or made a mistake with the chown user:group command. This is covered in our installation guide here: <https://pterodactyl.io/panel/1.0/getting_started.html#set-permissions>"
+          - "Remember to also chmod your storage with `cd /var/www/pterodactyl/ && chmod -R 755 storage/* bootstrap/cache/`"
+      - keyword: "unable to create lockable file"
+        response: *wrong_permissions
+      - keyword: '" is not writable'
+        response: *wrong_permissions
+          
+      - keyword: "unexpected 'const' (t_const)"
+        response: &old_php
+          - "PHP 7.4+ is required for Pterodactyl. Please check your PHP version with `php -v` and make sure that your web-server `pterodactyl.conf` config php-fpm version is updated to use it, if that shows PHP 7.4 please check your installed packages. Type `.php check` and I will respond with more information to view all listed PHP versions."
+          
+      - keyword: "expecting function (t_function) or const (t_const)"
+        response: *old_php         
+        
+      - keyword: "docker is not running"
+        response:
+          - "It looks like Docker potentially isn't running. You can run `systemctl status docker` to check its status."
+          
+      - keyword: "could not find or load main class @unix_args.txt"
+        response:
+          - "&user& You must use Java 17 for Forge 1.17+. Change the Docker image to java_17 in the startup tab."
+          
+      - keyword: "mobile app"
+        response: &mobile_app
+          - "Pterodactyl 1.x does not currently have any mobile apps and there's no estimated time for if or when it will be released. The Pterodactyl Panel website is responsive and works on mobile."
+      - keyword: "phone app"
+        response: *mobile_app      
+      - keyword: "pterodactyl mobile"
+        response: *mobile_app
+      - keyword: "pterodactyl on mobile"
+        response: *mobile_app          
+      - keyword: "mobile-addon"
+        response: *mobile_app            
+          
+      - keyword: "where are the server files located"
+        response:
+          - "The server files are stored in /var/lib/pterodactyl/volumes/ by default."    
+          
+      - keyword: "this server is in a failed install state and cannot be recovered."
+        response:
+          - "&user& Something must've gone teribbly wrong. You'll need to grab error logs from Wings to find out more. The following command allows you to easily collect the relevant data and share the link with us: `sudo wings diagnostics`"             
+
+      - keyword: "port 80: could not bind to ipv4 or ipv6"
+        response: &web_running
+          - |
+            &user&; You already have another service using port 80/443, such as Nginx or Apache.
+
+            Use `ss -plnt | grep :80` or `ss -plnt | grep :443` to find what process is currently using the port(s) and stop it.  
+            
+            Most likely, it would be `systemctl stop nginx` or `systemctl stop apache2`
+            
+      - keyword: "bind() to 0.0.0.0:443 failed"
+        response: *web_running            
+      - keyword: "could not bind to address 0.0.0.0:80"
+        response: *web_running            
+      - keyword: "(98: address already in use"
+        response: *web_running           
+           
+      - keyword: "[1044] access denied for user"
+        response:
+          - "&user&; Your database user doesn't appear to have sufficient permissions to access your database table."
+      - keyword: "having some trouble connecting to your server"
+        response: &wings_down
+          - |
+            &user&; It looks like your browser is unable to reach the Wings.
+            
+            Make sure that your wings are running using `systemctl status wings` and that your Wings ports (by default 8080/2022) are open in your firewall or router. This website can check your ports <https://dnschecker.org/port-scanner.php>
+
+            Browser console errors can also provide additional debugging information. More troubleshooting steps can be found at <https://pterodactyl.io/panel/1.0/troubleshooting.html#cannot-connect-to-server-errors>
+            
+            Should the panel and wings be located on the same network, you might experience NAT reflection issues. In that case, type `.nat` for more information.
+
+      - keyword: "error connection to node!"
+        response: *wings_down
+
+      - keyword: "port 8080: connection refused"
+        response: &wings_down2
+          - |
+            &user& It looks like you are having issues with connecting to Wings.
+            
+            Make sure that your wings are running using `systemctl status wings` and that your Wings ports (by default 8080/2022) are open in your firewall or router. This website can check your ports <https://dnschecker.org/port-scanner.php>
+            
+            Browser console errors can also provide additional debugging information. More troubleshooting steps can be found at <https://pterodactyl.io/panel/1.0/troubleshooting.html#cannot-connect-to-server-errors>
+            
+            Should the panel and wings be located on the same network, you might experience NAT reflection issues. In that case, type `.nat` for more information.
+
+      - keyword: "port 8443: connection refused"
+        response: *wings_down2
+      - keyword: "8443; connection refused (see"
+        response: *wings_down2
+      - keyword: "8080; connection refused (see"
+        response: *wings_down2
+      - keyword: "could not establish a connection to the machine running this server"
+        response: *wings_down2
+      - keyword: "there was an error while communicating with the machine running this server"
+        response: *wings_down2        
+      - keyword: "/api/system net::err_connection_refused"
+        response: *wings_down2 
+      - keyword: "there was an error while communicating with the machine running this server. this error has been logged, please try again. (code: 500)"
+        response: *wings_down2
+        
+      - keyword: "error connecting to node! check"
+        response: *wings_down      
+
+      - keyword: 'laravel\sanctum\sanctum" not found'
+        response:
+          - | 
+            Hey &user&! You have skipped the composer dependency update step or ignored errors during the process.
+            
+            Navigate back to the Panel update documentation and do not skip any steps or errors.
+            
+            <https://pterodactyl.io/panel/1.0/updating.html>
+
+      - keyword: "accessdeniedhttpexception: you are not authorized to access this resource. (http/403)"
+        response: &wings_wrong_token
+          - | 
+            Hey &user&! Your Wings token appears to be invalid. Overwrite your config with a new one from the panel to update the token.
+            
+            Not sure how to do it? It is the same setup that you performed during the installation <https://pterodactyl.io/wings/1.0/installing.html#configure>
+
+      - keyword: "access this resource. (http/403)"
+        response: *wings_wrong_token
+
+      - keyword: "/api/system` resulted in a `403 Forbidden"
+        response: *wings_wrong_token   
+
+      - keyword: "cannot acquire lock, already locked"
+        response: &powerlock
+          - |
+            &user& Please update to Wings 1.6.1 or newer should you experience power lock issues.
+            
+            <https://pterodactyl.io/wings/1.0/upgrading.html>
+            
+      - keyword: "cannot acquire a lock on the power state: already locked"
+        response: *powerlock     
+
+      - keyword: "mysql server has gone away"
+        response:
+          - | 
+            Hey &user&! Your database appears to be timing out or closing the connection. This error can happen for many reasons, such as using external IP while database has remote connections disabled, sending too large packets or a NAT reflection issue. For NAT I respond with more details when you type `.nat` into this chat.
+            
+            If you are not using external address for the connection, you can try to increase the values below in your `my.cnf` file by copying the example theoretical values shown below, adjust them if necessary.
+          
+            ```
+            [mysqld]
+            max_allowed_packet=64M
+            wait_timeout=28800
+            net_read_timeout=90
+            net_write_timeout=90
+            connect_timeout=90
+            interactive_timeout=300
+            ```          
+            
+            Type `find /etc -iname my.cnf` to find the location of the file. Restart your mysql `systemctl restart mysql` to apply the changes and pray it works.
+
+      - keyword: "econnrefused 127.0.0.1:3306"
+        response: &database_location
+          - |
+            If your server cannot see the database, please make sure your mod/plugin is connecting to `172.18.0.1` or the public IP to reach the local database. You can not use localhost or 127.0.0.1 as that would be the container itself.
+            
+            You also have to configure the database bind-address to listen on all interfaces following the guide below.
+            <https://pterodactyl.io/tutorials/mysql_setup.html#creating-a-database-host-for-nodes>
+            
+      - keyword: "luckperms-hikari - connection is not available, request timed out after 5000ms"
+        response: *database_location
+      - keyword: "socket fail to connect to host:127.0.0.1"
+        response: *database_location  
+      - keyword: "unable to connect to any of the specified mysql hosts"
+        response: *database_location          
+
+      - keyword: "select 1 from dual"
+        response:
+          - "&user&; This error appears to be due to insufficient permissions for your database, please see the following guide for more information: <https://pterodactyl.io/tutorials/mysql_setup.html#creating-a-database-host-for-nodes>"
+          
+      - keyword: "no database host was found that meets the requirements for this server"
+        response:
+          - "&user& You can add database host at admin Panel > Databases > Create New. You have to create a database host user first by following our guide at <https://pterodactyl.io/tutorials/mysql_setup.html#creating-a-database-host-for-nodes>"
+          
+      - keyword: "an error occurred while attempting to test mail settings: the post method is not supported for this route. supported methods: get, head."
+        response:
+          - "&user& You have mixed code modifications, such as from a third-party Panel theme. Advise your theme developer to update it to support new changes in the Panel."
+          - "The issue of any code modifications can also be fixed by updating the panel, which would overwrite any changes made to the Panel."
+          
+      - keyword: "fpm.sock failed"
+        response:
+          - "&user&; It looks like PHP-FPM is not running correctly on your server."
+          
+      - keyword: "docker.service could not be found"
+        response:
+          - "&user&; You need to install Docker on your host machine."
+          - "<https://pterodactyl.io/wings/1.0/installing.html#installing-docker>"    
+          
+      - keyword: "pool overlaps with other one on this address space"
+        response:
+          - "&user&; That's a fun one! You already have an existing Docker network that currently conflicts with Pterodactyl."
+          - "Change your Wings subnet to a different one by editing the Wings config file at `/etc/pterodactyl/config.yml`"
+          - ""
+          - "Example network configuration can be found here: https://discord.com/channels/122900397965705216/493443725012500490/838475977738420284"
+          
+      - keyword: "command 'certbot' not found"
+        response:
+          - "&user&; You don't have certbot installed. Follow this guide to install it: <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>" 
+
+      - keyword: "this request has been blocked; the content must be served over https"
+        response:
+          - |
+            &user&; Panel and Wings must communicate over HTTPS when either one has HTTPS enabled. Make sure to enable and use HTTPS for both.
+            
+            If you are using Cloudflare Proxy, please read this: <https://pterodactyl.io/wings/1.0/configuration.html#enabling-cloudflare-proxy> and make sure you have "Not behind proxy" option selected in Node settings.
+
+      - keyword: "failed to configure https server auto_tls=false error=open"
+        response:
+          - "&user&; Wings must have a certificate to use when SSL is enabled. Follow this guide to learn how to generate SSL certificates: <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>"
+          
+      - keyword: "no alternative certificate subject name matches target host name"
+        response: &wrong_sslhost
+          - "&user&; Wrong domain for your certificate! There is no valid certificate that matches your current domain. Follow this guide to learn how to create a new valid certificate: <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>"          
+          
+      - keyword: "x509: certificate is valid for"
+        response: *wrong_sslhost   
+      - keyword: "err_cert_common_name_invalid"
+        response: *wrong_sslhost           
+
+      - keyword: "/etc/letsencrypt/live/<domain>/fullchain"
+        response:
+          - "Hey, &user&! You must replace **<domain>** in the `pterodactyl.conf` SSL config to match your actual real domain."
+
+      - keyword: "fullchain.pem: no such file or directory"
+        response: &no_certs
+          - "Hey, &user&! You have configured to use HTTPS/SSL and are missing the SSL certificate. Follow this guide to generate SSL certificate: <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>"          
+          
+      - keyword: "ssl: error:02001002"
+        response: *no_certs
+      - keyword: "or directory:fopen('/etc/letsencrypt/live"
+        response: *no_certs
+      - keyword: "or directory:fopen('/etc/ssl"
+        response: *no_certs 
+
+      - keyword: "error: configuration file not found"
+        response: &wingConfMissing
+          - "No need to rush &user&! It appears that you skipped a step during your Wings installation and didn't create a configuration file as instructed here <https://pterodactyl.io/wings/1.0/installing.html#configure>"     
+
+      - keyword: "wings was not able to locate your configuration file"
+        response: *wingConfMissing      
+
+      - keyword: "json null after"
+        response: &outdated_mysql
+          - |
+            &user&; Your MariaDB or MySQL version is out-of-date. Please use the following command to see what version you are running: `mysql -v`
+
+            **System Requirements:**
+            - MySQL: `5.7.22` or higher (MySQL `8` recommended)
+            - MariaDB: `10.2` or higher
+
+      - keyword: "json_remove does not exist"
+        response: *outdated_mysql      
+
+      - keyword: "exec format error"
+        response:
+          - |
+            &user& The Docker image or application that you are trying to use does not support your CPU architecture. Support for ARM64 is scarce, and most applications do not support it; thus, Docker images for those applications are built for AMD64(x86_64) only.
+            
+            Multiarch Docker images have been built for applications that do run on ARM64, so make sure that your egg and docker image is up to date. SteamCMD eggs will not work at all.
+
+      - keyword: "http error 500"
+        response: &http500
+          - |
+            &user&; Your web server is experiencing issues. Most common causes for this error is having wrong file permissions.
+
+            Check your web server logs to find out what exactly is wrong. For Nginx, default path would be `/var/log/nginx/pterodactyl.app-error.log`
+            
+            `tail -n 150 /var/log/nginx/pterodactyl.app-error.log | nc pteropaste.com 99`
+            
+      - keyword: "http 500 error"
+        response: *http500 
+
+      - keyword: "as backup_uuid from servers left join (select * from aud..."
+        response:
+          - |
+            &user&; Your Panel version is out-of-date. Please use the following command to see what version you are running: `cd /var/www/pterodactyl && php artisan p:info`
+
+            The issue was resolved in 1.4.0, make sure that both Panel and Wings are up-to-date:
+            <https://pterodactyl.io/panel/1.0/updating.html>
+            <https://pterodactyl.io/wings/1.0/upgrading.html>
+
+      - keyword: "panel: httpexception: service unavailable (http/503)"
+        response: &panel_maintenance
+          - |
+            &user&; Your Panel is in maintenance mode and can not be reached. Type `php artisan up` in the web root `/var/www/pterodactyl` to disable the maintenance mode. 
+
+            Restart your wings with `systemctl reset-failed wings && systemctl restart wings` and your Wings should connect to the Panel.
+
+      - keyword: "503 | service unavailable"
+        response: *panel_maintenance   
+
+      - keyword: "error response from panel: :  (http/503)"
+        response: &cf_firewall
+          - |
+            &user&; It looks like you might be running your Panel instance behind Cloudflare? If that is the case you are likely getting blocked by the Cloudflare firewall.
+
+            If you run the following command on the machine where Wings is running and get an "error 1020" response it is certainly that: `curl https://your-panel.com`
+
+            Login to Cloudflare and navigate to Firewall -> Tools where you can allow your Wings IP, remember to include IPV6 if you have one.
+
+      - keyword: "missingresponsecode: no error response returned from api endpoint"
+        response:
+          - |
+            &user&; It looks like your panel is not responding correctly. This happens when your Panel points to a different website or if you have a firewall/CDN/DDOS Protection service such as Cloudflare blocking the connection. Try to open your the remote Panel URL from your Wings config and see what it loads (default Nginx/Apache page, wrong site, Cloudflare under attack verification).
+
+            If you run the following command on the machine where Wings is running and get an "error 1020" response it is certainly Cloudflare: `curl https://your-panel.com`
+
+            Login to Cloudflare and navigate to Firewall -> Tools where you can allow your Wings IP, remember to include IPV6 if you have one.
+        
+      - keyword: "error response from panel: :  (http/403)"
+        response: *cf_firewall
+      - keyword: "invalid character '<' looking for beginning of value"
+        response: *cf_firewall               
+
+      - keyword: "declaration of doctrine\dbal\driver\pdoconnection::query() must be compatible with pdo::query"
+        response:
+          - "&user&; When upgrading from a version 1.2.2 or older, ignore the PHP artisan down and up commands and continue the upgrade process without them. That's because your old Panel version doesn't have support for PHP 8."   
+
+      - keyword: "creating database user pterodactyl..."
+        response:
+          - "&user&; Be advised that Pterodactyl is a complicated software and using a third-party install script will most likely cause you to be lost whenever something goes wrong. Basic Linux knowledge is necessary to install and maintain this software. We're unable to assist with third-party script related issues."   
+          
+      - keyword: "create user failed for 'pterodactyl'@'127.0.0.1'"
+        response:
+          - |
+             &user&; Such user already exists from your previous install attempts. If you're intentionally reinstalling from scratch for whatever reason, make sure to DROP USER first.
+             ```mysql -u root -p
+             DROP USER 'pterodactyl'@'127.0.0.1';```
+          
+      - keyword: "the allocation id field is required'"
+        response:
+          - "&user&; You don't have any available allocations left. Create new allocations as instructed in the Wings install documentation:"
+          - "<https://pterodactyl.io/wings/1.0/installing.html#node-allocations>"          
+          
+      - keyword: "invalid maximum heap size"
+        response:
+          - "&user&; You need to set a memory limit for Java apps like Minecraft when specifying Xmx. Unlimited value of 0 will not work for Java."       
+
+      - keyword: "sudo: wings: command not found"
+        response:
+          - "You do not need `sudo` as the root user. Try again without it."
+      - keyword: "wings: command not found"
+        response: &installWings
+          - "You do not appear to have Wings installed and configured. Please refer to the Wings installation documentation at <https://pterodactyl.io/wings/1.0/installing.html>"
+
+      - keyword: "command 'wings' not found"
+        response: *installWings   
+
+      - keyword: "could not open input file: artisan"
+        response:
+          - "&user&; you must be in the panel directory (usually `/var/www/pterodactyl`) to run artisan commands."
+          
+      - keyword: "must include an authorization header"
+        response:
+          - "&user&; The requests are missing headers to authenticate. You most likely have a proxy or some kind of a redirect that is stripping the headers. If that is the case, make sure to create a rule to forward the headers or disable your proxy." 
+          
+      - keyword: "class 'memcached' not found"
+        response: &missing_memcache
+          - "&user&; You are trying to use memcached without having it installed, make sure to install the PHP memcached extension first."           
+
+      - keyword: 'class \"memcached\" not found'
+        response: *missing_memcache
+        
+      - keyword: "apparmor/exec: no such file"
+        response: &apparmor_missing
+          - |
+             &user&; AppArmor is enabled but utils are not installed. You have two choices to resolve the issue
+             
+             1). Install apparmor package and reboot
+             2). Disable AppArmor and reboot. For this, see <https://wiki.debian.org/AppArmor/HowToUse#Disable_AppArmor>
+             
+      - keyword: '"apparmor_parser": executable file not found'
+        response: *apparmor_missing   
+
+      - keyword: "temporary failure in name resolution"
+        response:
+          - "Failure to resolve domain names or IP addresses indicates that your DNS server is experiencing issues, you can try changing your DNS nameservers to `8.8.8.8`"
+          
+      - keyword: "error=ssh: no key found"
+        response:
+          - "&user& Something went wrong with generating your key. Lets try again by typing the following ```rm -rf /var/lib/pterodactyl/volumes/.sftp && systemctl restart wings```"
+          - ""
+          - "If you've upgraded from 0.7x the path might instead be `/srv/daemon-data/.sftp`"
+          
+      - keyword: "dns_probe_finished_nxdomain"
+        response: &dnsProbe
+          - "The domain you are trying to reach does not have valid DNS records or the DNS cache of your machine has not been updated yet. You can use <https://dnschecker.org/> to verify the DNS records of a domain."          
+
+      - keyword: "err_name_not_resolved"
+        response: *dnsProbe   
+
+      - keyword: "docker stats"
+        response: &docker_stats
+          - |
+             The server resource usage is retrieved from Docker stats. Type `docker stats` and make sure that statistics are displayed correctly for all containers.
+             
+             Broken docker stats can be caused by your Linux Kernel cgroups controllers not functioning or the wrong Docker version installed by using a package manager or performing a system package upgrade.
+             
+             Type `.cgroup` in this chat for me to provide more information about cgroup and containerd issues that a lot of Ubuntu users are experiencing after updating their system.
+             
+             The correct Docker version (docker-ce) is installed at <https://pterodactyl.io/wings/1.0/installing.html#installing-docker>
+             
+             Restart the servers to rebuild containers once you have fixed your docker stats.    
+
+      - keyword: "why ram is 0"
+        response: *docker_stats
+      - keyword: "how to fix statistics"
+        response: *docker_stats
+      - keyword: "why stats are not working"
+        response: *docker_stats
+      - keyword: "stats not working"
+        response: *docker_stats
+      - keyword: "stats are not working"
+        response: *docker_stats
+      - keyword: "stats dont work"
+        response: *docker_stats
+      - keyword: "broken stats"
+        response: *docker_stats
+      - keyword: "cpu is 0"
+        response: *docker_stats
+      - keyword: "ram is 0"
+        response: *docker_stats
+      - keyword: "resources 0"
+        response: *docker_stats
+      - keyword: "not showing usage"
+        response: *docker_stats
+      - keyword: "0 ram usage"
+        response: *docker_stats
+      - keyword: "ram stuck at 0"
+        response: *docker_stats
+      - keyword: "cpu stuck at 0"
+        response: *docker_stats
+      - keyword: "cpu 0%"
+        response: *docker_stats
+      - keyword: "ram 0%"
+        response: *docker_stats
+      - keyword: "stats not updating"
+        response: *docker_stats
+      - keyword: "0 cpu"
+        response: *docker_stats
+      - keyword: "0.00% cpu"
+        response: *docker_stats
+      - keyword: "0 ram"
+        response: *docker_stats
+      - keyword: "0kb ram"
+        response: *docker_stats
+      - keyword: "cpu and ram usage"
+        response: *docker_stats
+      - keyword: "stuck on 0"
+        response: *docker_stats
+      - keyword: "0h 0m 0s"
+        response: *docker_stats
+      - keyword: "resource usage"
+        response: *docker_stats 
+
+      - keyword: 'wings: 1: syntax error: "(" unexpected'
+        response: &arm64_wings
+          - |
+             &user& You have the wrong binary for your architecture. Type `uname -m` to confirm. ARM64/AARCH64 Wings binary can be found in the Github releases <https://github.com/pterodactyl/wings/releases>
+             
+             ```
+             curl -L -o /usr/local/bin/wings https://github.com/pterodactyl/wings/releases/latest/download/wings_linux_arm64
+             ```
+             
+          
+      - keyword: "usr/local/bin/wings: syntax error"
+        response: *arm64_wings
+      - keyword: "wings:cannot execute binary file: exec format error"
+        response: *arm64_wings        
+          
+      - keyword: "dont work"
+        response: &vagueQuestion
+          - |
+            Please explain the issue you're experiencing in as much detail as possible. Preferably with error messages in a **text format or paste link to logs**. Nobody can assist you without information that helps to understand the issue. Help us help you. Messages such as "doesn't work" or "i need help" will most likely be ignored.
+          
+      - keyword: "don't work"
+        response: *vagueQuestion
+      - keyword: "doesn't work"
+        response: *vagueQuestion
+      - keyword: "doesn't work"
+        response: *vagueQuestion
+      - keyword: "help me"
+        response: *vagueQuestion
+          
+      - keyword: "bind source path does not exist: /tmp/pterodactyl"
+        response: &bind_docker
+          - |
+            &user&; Execute the commands below and post the output
+            
+            ```
+            sudo docker info | nc pteropaste.com 99
+            sudo snap list  | nc pteropaste.com 99
+            ```
+      - keyword: "source path does not exist: /var/lib/pterodactyl/volumes/"
+        response: *bind_docker 
+
+      - keyword: "operating system: ubuntu core"
+        response: &wrong_docker
+          - "&user&; Appears you have installed wrong Docker version using snap or package manager. If that is the case, please reinstall it using the official documentation, which would install Docker-ce from their own site: <https://pterodactyl.io/wings/1.0/installing.html#installing-docker>"
+          
+          
+      - keyword: "operating system: centos linux 7 (core)"
+        response: *wrong_docker          
+
+      - keyword: "not found: manifest unknown"
+        response: &wrong_image
+          - "&user&; The docker image you are trying to use does not exist. Double-check it making sure it's in all lowercase and exists."
+          
+      - keyword: "invalid reference format"
+        response: *wrong_image             
+
+      - keyword: "pthread_create failed (eperm)"
+        response: 
+          - |        
+            &user&; Keep your system up to date! Read: https://discord.com/channels/122900397965705216/817872891764670514/1062023755154595880
+             
+      - keyword: "unable to create native thread"
+        response: &pid_limit
+          - |        
+            &user&; Increase the `container_pid_limit` in the Wings `config.yml` file located at `/etc/pterodactyl`. Restart Wings and the game server to apply these new limits.
+             
+            You can disable this completely by setting the value 0. This is **not** recommended when hosting servers for other users as they can overload the machine beyond the configured resource limits.        
+
+      - keyword: "pthread_create failed (eagain)"
+        response: *pid_limit  
+      - keyword: "java.lang.outofmemoryerror: unable to create new native thread"
+        response: *pid_limit           
+
+      - keyword: "no space left on device"
+        response: &no_space
+          - |
+            &user&; It looks like you ran out of disk space, make sure enough space is allocated and available to the server. You can also check your available disk space on the machine with the command `df -h`
+            
+            If you are using the **Python bot egg** or anything that writes to tmp folder, you need to increase the `tmpfs_size` in your Wings config at `/etc/pterodactyl/config.yml` and restart Wings to apply the new config. 
+            
+      - keyword: "[errno 28] no space left"
+        response: *no_space         
+        
+      - keyword: "not enough disk space"
+        response: *no_space            
+
+      - keyword: "how to change domain"
+        response: &change_domain
+          - |
+            &user& You have to modify the server_name in your web server `pterodactyl.conf` file. Don't know where to find it? Type the command `.webconf` and I will provide more instructions.
+            
+            If you're using a SSL certificate,  remember to also change the SSL paths in `pterodactyl.conf` file to match your new domain and generate a new certificate: <https://pterodactyl.io/tutorials/creating_ssl_certificates.html>  
+            
+            Next, modify the `app_url` in the `.env` file located at `/var/www/pterodactyl` by typing `nano /var/www/pterodactyl/.env`. Restart your web server to apply these changes.
+            
+            Wings config file must be updated to match the new Panel URL. You can do it manually in the `config.yml` file located at `/etc/pterodactyl` or overwrite it completely by copying it from the Panel. Go to Nodes -> <your node> -> Configuration to auto-deploy or copy the config file.       
+
+      - keyword: "how to change panel domain"
+        response: *change_domain
+      - keyword: "how can i change domain"
+        response: *change_domain
+      - keyword: "how to change the domain"
+        response: *change_domain  
+      - keyword: "how to change a domain"
+        response: *change_domain
+      - keyword: "how do i change a domain"
+        response: *change_domain
+      - keyword: "how do i change domain"
+        response: *change_domain
+      - keyword: "how do i change the domain"
+        response: *change_domain  
+      - keyword: "update pterodactyl domain"
+        response: *change_domain
+      - keyword: "change panel domain"
+        response: *change_domain  
+      - keyword: "change the domain of the panel"
+        response: *change_domain          
+      - keyword: "change subdomain of the panel"
+        response: *change_domain  
+      - keyword: "way to change the domain"
+        response: *change_domain  
+
+      - keyword: "the docker image field is required"
+        response:
+          - "Your panel is out of date, please update both the panel and wings using the links below."
+          - "**Panel:** <https://pterodactyl.io/panel/1.0/updating.html>"
+          - "**Wings:** <https://pterodactyl.io/wings/1.0/upgrading.html>"
+          
+      - keyword: "the mac is invalid"
+        response:
+          - |
+            Oh dear, &user&. It looks like you've probably edited the Panel's encryption keys. This is not a good thing... :/
+
+            If you have a backup of your Panel, please locate and restore the `.env` file from that backup. However, if you do not have a backup, your information is — unfortunately — toast, and cannot be recovered.
+
+            Please check out the following resource for more information on this: <https://pterodactyl.io/panel/1.0/troubleshooting.html#invalid-mac-exception>
+            
+      - keyword: "443: connect: connection refused"
+        response:
+          - |
+            &user& Your Panel has not been configured to listen on port 443 and use an HTTPS connection, or it's currently unreachable.
+            
+            If your Panel is running and reachable on HTTPS, try restarting the failed-count `systemctl reset-failed wings && systemctl restart wings`. Otherwise, look into your web server status and its configuration to ensure SSL configuration is being used.    
+            
+      - keyword: "80: connect: connection refused"
+        response:
+          - |
+            &user& Your Panel is currently down and not reachable or the remote URL is wrong.
+            
+            If your Panel is running and reachable, try restarting the failed-count `systemctl reset-failed wings && systemctl restart wings`. Otherwise, look into your web server status and its configuration.            
+
+
+      - keyword: "csrf token mismatch"
+        response:
+          - |
+            &user&; Enable SSL for your Panel with HTTPS protocol scheme in the APP_URL, or set `SESSION_SECURE_COOKIE` to `false` in your `.env` which is a hidden file located at `/var/www/pterodactyl`.
+            
+            You can open it directly with `nano /var/www/pterodactyl/.env`. Refresh config cache with `cd /var/www/pterodactyl && php artisan config:clear`
+            
+            
+    #  - keyword: "wings.service: Start request repeated too quickly."
+    #    response:
+    #      - "You can reset the restart timer with the following command: ```systemctl reset-failed wings && systemctl restart wings```"
+      - keyword: "no application encryption key has been specified"
+        response:
+          - |        
+            Uh, oh &user&! You did not generate the encryption key during your Panel installation or are trying to perform artisan commands in the wrong folder!
+            
+            If none of the above is true, you might have overwritten or lost your encryption key, which means all the encrypted data is toast unless you have a backup.
+            
+      - keyword: "tcp 0.0.0.0:2022: bind: address already in use"
+        response: &sftp_bind_error
+          - |
+            You already have an instance of Wings running through systemd service and are trying to start another duplicate instance, for example by using the commands `wings` and `wings --debug`, or another service is using the port.
+
+            Use `ss -plnt | grep 2022` to find what process is currently running and stop it. You can type `killall -9 wings` to shutdown any ghost Wings process if you are intentionally attempting to run Wings in debug manually.
+
+      - keyword: "listen tcp 0.0.0.0:8080: bind: address already in use"
+        response: &wings_bind_error
+          - |
+            You already have an instance of Wings running through systemd service and are trying to start another duplicate instance, for example by using the commands `wings` and `wings --debug`, or another service is using the port.
+
+            Use `ss -plnt | grep :8080` (or `grep :8443` depending on the port) to find what process is currently running and stop it. You can type `killall wings` to shutdown any ghost Wings process.
+
+      - keyword: "8443: bind: address already in use"
+        response: *wings_bind_error
+      - keyword: "8080: bind: address already in use"
+        response: *wings_bind_error
+      - keyword: "8081: bind: address already in use"
+        response: *wings_bind_error  
+      - keyword: "8082: bind: address already in use"
+        response: *wings_bind_error  
+        
+      - keyword: "failed to write 1 to memory.oom_control"
+        response: &lxc_oom
+          - |
+            Hey &user&! Looks like you have unsupported virtualization type, such as LXC, OPENVZ or OVZ. You are warned of this in the system requirements step: <https://pterodactyl.io/wings/1.0/installing.html#system-requirements>
+             
+            You can type `systemd-detect-virt` to double-check.
+             
+            Try to enable OOM (out-of-memory killer) on the server that is not starting through the admin panel -> {server} -> Build configuration should the memory control cgroup be the only broken mount.
+
+      - keyword: 'failed to write "1": write /sys/fs/cgroup/memory'
+        response: *lxc_oom           
+      - keyword: "memory.oom_control: permission denied: unknown"
+        response: *lxc_oom
+      - keyword: "memory.oom_control: invalid argument: unknown"
+        response: *lxc_oom          
+      - keyword: "memory.oom_control: permission denied"
+        response: *lxc_oom        
+      
+      - keyword: "-pve"
+        response:
+          - |
+            Skkkkrrrttt! Pump the brakes kiddo!
+
+            Looks like your VPS is an `LXC container`, which unfortunately is not generally supported by Docker. Type `systemd-detect-virt` to double-check, and should you continue receiving random mount/target errors, this is the cause.
+            
+      - keyword: "caused: permission denied: unknown"
+        response: &check_lxc
+          - |
+            Hey &user&! Looks like you have unsupported virtualization type, such as LXC, OPENVZ or OVZ. You are warned of this in the system requirements step: <https://pterodactyl.io/wings/1.0/installing.html#system-requirements>
+            
+            You can type `systemd-detect-virt` to double-check.
+          
+      - keyword: "caused: permission denied: unknown"
+        response: *check_lxc    
+      - keyword: "procfd: permission denied: unknown"
+        response: *check_lxc
+        response: *check_lxc
+      - keyword: "devices.allow: operation not permitted"
+        response: *check_lxc            
+      - keyword: "cgroup doesn't match target mode: unknown"
+        response: *check_lxc
+      - keyword: "cgroup doesn't match target mode: unknown"
+        response: *check_lxc
+      - keyword: "cgroups: cgroup mountpoint does not exist"
+        response: *check_lxc
+
+      - keyword: "your kernel does not support cgroup blkio weight_device"
+        response: &cgroupv2
+          - |
+            Hey &user&! Looks like you are missing mounts for cgroup V2. Enable the controllers for your system or downgrade to cgroup V1.
+            
+            Downgrading can be done by adding `systemd.unified_cgroup_hierarchy=0`to your grub cmdline at `/etc/default/grub`. After that, run `sudo update-grub` followed by `sudo reboot` to restart the machine.
+
+      - keyword: "io.weight: no such file or directory: unknown"
+        response: *cgroupv2
+      - keyword: "io.bfq.weight: no such file or directory"
+        response: *cgroupv2
+        
+      - keyword: "your kernel does not support oomkilldisable"
+        response: &brokenoom
+          - |
+            Hey &user&! You appear to be using cgroup V2, which doesn't support OOM killer. You can ignore and not use it, or downgrade to cgroup V1.
+            
+            Downgrading can be done by adding `systemd.unified_cgroup_hierarchy=0`to your grub cmdline at `/etc/default/grub`. After that, run `sudo update-grub` followed by `sudo reboot` to restart the machine.
+
+    parsing:
+      image:
+        filetypes:
+          - png
+          - jpg
+      paste:
+        sites:
+          - name: pastebin
+            url: "https://pastebin.com/"
+            format: "https://pastebin.com/raw/&filename&"
+          - name: hastebin
+            url: "https://hastebin.com/"
+            format: "https://hastebin.com/raw/&filename&"
+          - name: filepaste
+            url: "https://file.properties/paste/"
+            format: "https://s.file.properties/p/raw/&filename&"
+          - name: pdtl
+            url: "http://bin.ptdl.co/"
+            format: "http://bin.ptdl.co/&filename&"
+          - name: pdtls
+            url: "https://bin.ptdl.co/"
+            format: "https://bin.ptdl.co/&filename&"
+          - name: ptero
+            url: "https://ptero.co/"
+            format: "https://ptero.co/raw/&filename&"
+          - name: ghostbin
+            url: "https://ghostbin.com/"
+            format: "https://ghostbin.com/&filename&/raw"
+          - name: oaka
+            url: "http://bin.oaka.xyz/"
+            format: "http://bin.oaka.xyz/&filename&"
+          - name: oakas
+            url: "https://bin.oaka.xyz/"
+            format: "https://bin.oaka.xyz/&filename&"
+          - name: pterosh
+            url: "http://bin.ptero.sh/"
+            format: "http://bin.ptero.sh/&filename&"
+          - name: pteroshs
+            url: "https://bin.ptero.sh/"
+            format: "https://bin.ptero.sh/&filename&"
+          - name: pteropaste
+            url: "https://pteropaste.com/"
+            format: "https://pteropaste.com/&filename&"
+          - name: pteroshs
+            url: "https://www.toptal.com/developers/hastebin/"
+            format: "https://www.toptal.com/developers/hastebin/raw/&filename&"  
+        ignore:
+          - name: pterodactyl
+            url: "https://pterodactyl.io"
+          - name: github
+            url: "https://github.com"
+          - name: google
+            url: "https://google.com"
+            
+  - channels: # whmcs-module
+      - "418523678557470720" # whmcs-module
+      
+    commands:
+      - command: logs
+        response:
+          - "Please read the FAQ regarding how to enable debug module logs <https://github.com/pterodactyl/whmcs#how-to-enable-module-debug-log>"
+      - command: faq
+        response:
+          - "The FAQ contains answers to most of the questions related to the module <https://github.com/pterodactyl/whmcs>"
+      - command: email
+        response:
+          - "The customer would receive an email from your Pterodactyl panel to set up their account if they didn't have an account before. Otherwise, they should be able to use their existing credentials."          
+          
+    keywords:
+      - keyword: "find any nodes satisfying the request"
+        response: &no_nodes
+        - |
+           &user& This can be caused from any of the following:
+           
+           - Wrong location
+           - Not enough Disk Space/RAM on your Node allocation limits (check Node Settings on the Panel)
+           - No available Node allocations matching the provided criteria
+           - Private Node. To make it public, please enable `Allow Automatic Allocation` in the Node settings.
+           
+           Compare your order request from the module logs with what is available on your Node.
+          
+      - keyword: "no nodes satisfying the requirements specified for automatic deployment could be found"
+        response: *no_nodes
+      - keyword: "could not find nodes that meet the requirements specified for automatic deployment"
+        response: *no_nodes
+        
+        
+           
+      - keyword: "an unexpected error was encountered while processing this request, please try again"
+        response: &panel_error
+        - |
+           &user& Your Panel or Wings are returning errors. Please navigate to <#658550982975946762> or <#817872891764670514> and post your logs there.
+           
+           Type `.logs` command in either of the channels to receive instructions on how to retrieve logs.
+
+      - keyword: "panel errored, check panel logs"
+        response: *panel_error
+        
+      - keyword: "there was an error while communicating with the machine running this server"
+        response: *panel_error
+        
+      - keyword: "notfoundhttpexception"
+        response: &notFound
+        - |
+           &user& 404 errors for user external ID requests can be ignored as it's a check to see if such user already exists. It's not an error.
+           
+           404 not found error for other requests indicates just that, what you're requesting doesn't exist. Double-check your URL and product options. Valid Nest and Egg ID from within that Nest as example is required. They also can't be empty.
+           
+      - keyword: "the requested resource could not be found on the server"
+        response: *notFound
+           
+      - keyword: "the feature limits.backups field must be present"
+        response:
+          - "Please update your module by redownloading it <https://github.com/pterodactyl/whmcs>"
+          
+      - keyword: "enable module debug log for more info"
+        response:
+          - "Please read the FAQ regarding how to enable debug module logs <https://github.com/pterodactyl/whmcs#how-to-enable-module-debug-log>"
+          - "Post the response of the debug logs to find out more information about your issue."
+          
+      - keyword: "accessdeniedhttpexception"
+        response:
+          - "Double-check the WHMCS server group password which should be your Application Key with the correct required permissions."    
+
+      - keyword: "failed to create the server, received the error code: 422"
+        response:
+          - "You appear to be missing one or more required egg variables. Open your module debug log to find out more." 
+
+      - keyword: "no allocations satisfying the requirements for automatic deployment were found"
+        response:
+          - "There are no available allocations matching your port range request. Check your Node allocations and compare them to your order request."            
+          
+    parsing:
+      image:
+        filetypes:
+          - png
+          - jpg
+      paste:
+        sites:
+          - name: pastebin
+            url: "https://pastebin.com/"
+            format: "https://pastebin.com/raw/&filename&"
+
+          - name: hastebin
+            url: "https://hastebin.com/"
+            format: "https://hastebin.com/raw/&filename&"
+
+          - name: filepaste
+            url: "https://file.properties/paste/"
+            format: "https://s.file.properties/p/raw/&filename&"
+
+          - name: pdtl
+            url: "http://bin.ptdl.co/"
+            format: "http://bin.ptdl.co/&filename&"
+
+          - name: pdtls
+            url: "https://bin.ptdl.co/"
+            format: "https://bin.ptdl.co/&filename&"
+
+          - name: ptero
+            url: "https://ptero.co/"
+            format: "https://ptero.co/raw/&filename&"
+
+          - name: ghostbin
+            url: "https://ghostbin.com/"
+            format: "https://ghostbin.com/&filename&/raw"
+          - name: oaka
+            url: "http://bin.oaka.xyz/"
+            format: "http://bin.oaka.xyz/&filename&"
+          - name: oakas
+            url: "https://bin.oaka.xyz/"
+            format: "https://bin.oaka.xyz/&filename&"
+          - name: pterosh
+            url: "http://bin.ptero.sh/"
+            format: "http://bin.ptero.sh/&filename&"
+          - name: pteropaste
+            url: "https://pteropaste.com/"
+            format: "https://pteropaste.com/&filename&"
+          - name: pteroshs
+            url: "https://bin.ptero.sh/"
+            format: "https://bin.ptero.sh/&filename&"                
+
+        ignore:
+          - name: pterodactyl
+            url: "https://pterodactyl.io"
+
+          - name: github
+            url: "https://github.com"
+
+          - name: google
+            url: "https://google.com"          
+          
+  - channels: # blesta-module
+      - "768170484666859561" # blesta-module
+            
+    keywords:
+      - keyword: "find any nodes satisfying the request"
+        response: &no_nodes
+        - |
+           This can be caused from any of the following:
+           
+           - Wrong location
+           - Not enough Disk Space/CPU/RAM on your Node allocation limits
+           - No available Node allocations matching the provided criteria
+           
+           Compare your order request from the module logs with what is available on your Node.
+          
+      - keyword: "no nodes satisfying the requirements specified for automatic deployment could be found"
+        response: *no_nodes
+          
+      - keyword: "no allocations satisfying the requirements for automatic deployment were found"
+        response:
+          - "There are no viable allocations matching your request. Check your Node allocations and compare them to your order request."            
+          
+  - channels: # discusion & feedback-and-suggestions
+      - "376449434654998539" # discusion
+      - "284416495189098498" # feedback-and-suggestions
+    commands:
+      - command: donate
+        response:
+          - "One-time donations and monthly sponsors are welcome through Github here <https://github.com/sponsors/matthewpi>"
+          - ""
+          - "There are 3 levels of donor. All levels get access to the not so secret donor channel."
+          - "The levels for donations are:"
+          - "Donor I - $5"
+          - "Donor II - $20"
+          - "Donor III - $50"
+
+      - command: about-bot
+        response:
+          - "The software running the support bot is <https://github.com/parkervcp/parkertron>"
+          - "It's getting updated constantly as new issues are found"
+          
+      - command: nothelp
+        response:
+          - "This channel is not for support, please take this to one of the help channels such as <#764995848101691402>, <#658550982975946762>, or <#817872891764670514>"     
+
+  - channels: # support-bot
+      - "675872510662803466"
+
+    commands:
+      - command: about
+        response:
+          - "The software running the support bot is <https://github.com/parkervcp/parkertron>"
+          - "It's getting updated constantly as new issues are found"
+
+      - command: help
+        response: &support_bot_channel_response
+          - "This is not a support channel"
+          - "Please take your issue to the <#658550982975946762> channel"
+
+      - command: donate
+        response:
+          - "One-time donations and monthly sponsors are welcome through Github here <https://github.com/sponsors/matthewpi>"
+          - ""
+          - "There are 3 levels of donor. All levels get access to the not so secret donor channel."
+          - "The levels for donations are:"
+          - "Donor I - $5"
+          - "Donor II - $20"
+          - "Donor III - $50"
+
+    mentions:
+      ping:
+        response: *support_bot_channel_response
+      mention:
+        response: *support_bot_channel_response
+
+  - channels: # eggs-games custom-game-help
+      - "404105683336953866"
+
+    commands:
+      - command: repos
+        response:
+          - "Please check the eggs repos at <https://github.com/orgs/pelican-eggs/repositories>"
+          - ""
+          - "New Docker images are available at <https://github.com/pelican-eggs/yolks>"
+      - command: learnlinux
+        response:
+          - "**You are expected to understand how to read documentation to use this Panel.** We have spent many hours detailing how to install or upgrade our software. Please, take some time and read rather than copy and pasting and then complaining when things do not work."
+          - ""
+          - "If you expect to be able to install this with no understanding of basic linux system administration you should stop and turn around now"
+      - command: eggs
+        response:
+          - "Please check parkers eggs repository at <https://github.com/orgs/pelican-eggs/repositories>"        
+
+      - command: how-to
+        response:
+          - "Please read the following <https://pterodactyl.io/community/config/eggs/creating_a_custom_egg.html>"
+          - "and <https://pterodactyl.io/community/config/eggs/creating_a_custom_image.html>"
+
+      - command: minecraft
+        response:
+          - "View our minecraft proxy guide <https://pterodactyl.io/community/games/minecraft.html>"
+          
+      - command: vague
+        response:
+          - |
+            Please explain the issue you're experiencing in as much detail as possible. Preferably with error messages in a **text format or links to logs**. Nobody can help you without information that helps to understand the issue. Messages such as "doesn't work" or "i need help" will most likely be ignored.
+
+      - command: logs
+        response:
+          - "It looks like your install has failed."
+          - "We need your install logs to see why the install may have failed. Use the command below on your Wings machine SSH terminal."
+          - " "
+          - "If you are on 1.x:"
+          - "```tail -n 1000 $(ls -Alrt /var/log/pterodactyl/install/*.log | tail -1 | sed 's/  */ /g' | cut -s -d' ' -f9) | nc pteropaste.com 99```"
+          - "If you are on or upgraded from 0.7:"
+          - "```tail -n 1000 $(ls -Alrt /srv/daemon/config/servers/*/install.log | tail -1 | sed 's/  */ /g' | cut -s -d' ' -f9) | nc pteropaste.com 99```"
+
+      - command: support
+        response:
+          - "Please take this issue to a general support channel"
+          - "One of these channels <#122903114423599104>, <#404106122127998977>, or <#414559797468200992>"
+
+      - command: minecraft
+        response:
+          - "View our minecraft proxy guide <https://pterodactyl.io/community/games/minecraft.html>"     
+
+      - command: ark rcon
+        response:
+          - |
+            ARK requires RCON for console output. You have to wait for the server to start before it can connect to the RCON.
+            
+            Ensure that you have RCON enabled, enough memory allocated, and don't have any errors for missing files during the startup or a mistyped map name in the startup variables that would prevent it from starting.
+            
+      - command: ports
+        response:
+          - |
+            All ports that should be available to the server must be assigned to it. You can assign additional allocations to your server by going to:
+            
+            Admin panel -> Servers -> {Your Server} -> Build Configuration -> Allocation Management
+            
+            They must also be allowed in your external firewalls, such as one from your provider (OVH game firewall, GCP, AWS, etc).
+
+      - command: import
+        response:
+          - "Here is a guide to import eggs"
+          - "<https://github.com/parkervcp/eggs#how-to-import-an-egg>"
+          
+      - command: arkcluster
+        response:
+          - "Here is a guide for ark clusters: <https://discord.com/channels/122900397965705216/404105683336953866/850181339138359297>."
+          - "You will also have to read about mounts here: <https://pterodactyl.io/guides/mounts.html>"        
+
+      - command: donate
+        response:
+          - "One-time donations and monthly sponsors are welcome through Github here <https://github.com/sponsors/matthewpi>"
+          - ""
+          - "There are 3 levels of donor. All levels get access to the not so secret donor channel."
+          - "The levels for donations are:"
+          - "Donor I - $5"
+          - "Donor II - $20"
+          - "Donor III - $50"
+
+      - command: coffee
+        response:
+          - "You can buy parker a coffee if you want <https://www.buymeacoffee.com/parkervcp>"
+
+      - command: french
+        response:
+          - "Vous pouvez utiliser google translate pour donner plus de sens"
+
+      - command: serverlist
+        response:
+          - "We cannot guarantee that your server will show up in the server list."
+          
+      - command: stock
+        response:
+          - "Default panel eggs can be found at <https://github.com/pterodactyl/panel/tree/develop/database/Seeders/eggs>"
+
+      - command: database
+        response:
+          - |
+            If your server cannot see the database, please make sure your mod/plugin is connecting to `172.18.0.1` to reach the local machine. You can not use localhost or 127.0.0.1 as that would be the container itself.
+            
+            You also need to configure the database bind-address to listen on all interfaces following the guide below.
+            <https://pterodactyl.io/tutorials/mysql_setup.html#creating-a-database-host-for-nodes>   
+
+      - command: fivem
+        response:
+          - "The fivem egg is at <https://github.com/parkervcp/eggs/tree/master/game_eggs/gta/fivem>"
+          
+      - command: java17
+        response:
+          - "View this guide to add java 17 image https://discord.com/channels/122900397965705216/404105683336953866/786906574622031872"       
+          
+      - command: cfxe
+        response:
+          - "If you are seeing the `This environment is not supported for running the Cfx.re platform server.` then you need to set the version variable manually and reinstall."
+          - "You set the `FIVEM_VERSION` variable when the server is created."
+          - "Please understand we are not updating the egg to grab versions right now while we work with the fivem team on a better way to get versions."        
+
+      - command: bash math
+        response:
+          - "You can do math in the startup. Please see here."
+          - "<https://github.com/pterodactyl/panel/issues/2758#issuecomment-735232743>"
+
+    keywords:
+      - keyword: "no egg configuration was defined for this egg"
+        response:
+          - "If you recently imported an egg &user&, please restart the daemon."
+          - "It's usually `systemctl restart wings`."
+          - "if you see this after restarting wings you may need to delete and re-create the server"
+
+      - keyword: "exec format error"
+        response:
+          - |
+            &user& The Docker image or application that you are trying to use does not support your CPU architecture. Support for ARM64 is scarce, and most applications do not support it; thus, Docker images for those applications are built for AMD64(x86_64) only.
+            
+            Multiarch Docker images have been built for applications that do run on ARM64, so make sure that your egg and docker image is up to date. SteamCMD eggs will not work at all.
+
+      - keyword: "state is 0x202 after update job"
+        response: &nodisk_space
+          - "It looks like you ran out of disk space. Make sure enough space is allocated and available to the server."
+          - "You can also check your machine disk space by typing the command `df -h`"  
+          
+      - keyword: "fatal error: steamcmd needs 250mb of free disk space to update"
+        response: *nodisk_space        
+      - keyword: "0x202 error after update job"
+        response: *nodisk_space            
+          
+      - keyword: "no space left on device"
+        response:
+          - | 
+            It looks like you ran out of disk space. Make sure you have enough space allocated and available on the server.
+            You can also check your available machine disk space with the command `df -h`
+            
+            **If you are using a python bot or anything relying on tmp**, you have to increase the `tmpfs_size` in your Wings config at `/etc/pterodactyl/config.yml` and restart wings to apply the new config.
+
+      - keyword: "allocate port"
+        response: &portAllocations
+          - |
+            All ports that should be available to the server must be assigned to it. You can assign additional allocations to your server by going to:
+            
+            Admin panel -> Servers -> {Your Server} -> Build Configuration -> Allocation Management
+
+      - keyword: "allocate a port"
+        response: *portAllocations
+            
+      - keyword: "usgameport != usqueryport"
+        response:
+          - |
+            &user& The query port can't be the same as your game primary port. Change it to something else. By default the primary port is 7777 and query port is 27015.
+            
+      - keyword: "quay.io"
+        response:
+          - |
+            Hey &user&, It looks like the docker container you are running is quite out of date.
+			All new images are located on ghcr. Please see the yolks repo to get the list of available images.
+			<https://github.com/pterodactyl/yolks>
+
+      - keyword: "dial tcp 127.0.0.1:27020: connect: connection refused"
+        response: &ark_rcon
+          - |
+            ARK requires RCON for console output. You have to wait for the server to start before it can connect to the RCON.
+            
+            Ensure that you have RCON enabled, enough memory allocated (+8-14GB depending on map), and don't have any errors for missing files during the startup or a mistyped map name in the startup variables that would prevent it from starting. Be aware that ARK is a resource intensive game.
+            
+            Any issues with connecting to ARK server once it has started successfully are caused by a firewall or missing allocations. ARK requires multiple allocations with the **query port** used for joining. Type `.ports` if you don't know how to assign new allocations.
+
+      - keyword: "waiting for rcon connection"
+        response: *ark_rcon
+
+      - keyword: "temporary failure resolving"
+        response: &dockerDNS
+          - "Failure to resolve domains during install indicates your Wings DNS experiencing issues. You can try restarting Docker `systemctl restart docker` which will also restart all your running servers."
+          - ""
+          - "Should the issue still persist, make sure the DNS nameservers used by Wings are not blocked by your provider. The Wings DNS nameservers can be changed in the `config.yml` file located at `/etc/pterodactyl`."
+
+      - keyword: "could not resolve host"
+        response: *dockerDNS
+      - keyword: "inrelease  connection timed out"
+        response: *dockerDNS
+      - keyword: "java.net.unknownhostexception"
+        response: *dockerDNS
+
+      - keyword: "alwayspretouch"
+        response:
+          - |
+            Do not use the `AlwaysPreTouch` Aikar flag as it will preallocate all the memory and starve the container causing it to freeze or crash. Aikar's website warns of this.
+            
+            Remove the flag or lower the Xmx to have overhead for the container, for example, with `-Xmx$(({{SERVER_MEMORY}}-512))M`
+            
+      - keyword: "use netcat"
+        response: &netcat
+          - |
+            Ah, &user&, You're missing `netcat` on your system. We can fix this easily, just run one of the commands below based on your server OS and you should be up and running quicky.
+
+            **Ubuntu/Debian Systems:** `apt install -y netcat`
+            **CentOS/RHEL:** `yum install -y nmap-ncat`
+
+      - keyword: "econnrefused 127.0.0.1:3306"
+        response: &database_location
+          - |
+            If your server cannot see the database, please make sure your mod/plugin is connecting to `172.18.0.1` to reach the local machine. You can not use localhost or 127.0.0.1 as that would be the container itself.
+            
+            You also need to configure the database bind-address to listen on all interfaces following the guide below.
+            <https://pterodactyl.io/tutorials/mysql_setup.html#creating-a-database-host-for-nodes>
+            
+      - keyword: "luckperms-hikari - connection is not available, request timed out after 5000ms"
+        response: *database_location         
+          
+      - keyword: "invalid maximum heap size"
+        response:
+          - "You need to set a specific memory limit for Java apps like Minecraft. Unlimited value of 0 will not work for Java."     
+          
+      - keyword: "bind: cannot assign requested address"
+        response: &wingsProblem
+          - "&user&; Please keep Wings related issues in <#817872891764670514> where I can assist you."
+          
+      - keyword: "apparmor/exec: no such file"
+        response: *wingsProblem
+      - keyword: '"apparmor_parser": executable file not found'
+        response: *wingsProblem
+
+      - keyword: "this server is in a failed install state and cannot be recovered. please delete and re-create the server"
+        response: *wingsProblem    
+            
+      - keyword: "error response from daemon: no such image:"
+        response:
+          - | 
+            &user& Your machine fails to pull the Docker image. Attempt to manually pull it on your Wings machine to see why it fails.
+            
+            Type `docker pull <image>` replacing <image> with the one in your error.
+
+      - keyword: "no server egg configuration could be located"
+        response:
+          - "Looks like you're using the legacy 0.7 panel or WISP. If you recently imported an egg &user&, please restart the daemon."
+          - "It's usually `systemctl restart wings`."
+
+      - keyword: "a fatal error was encountered while starting this server"
+        response:
+          - "You'll need to grab error logs from the Wings. The following command allows to easily collect the relevant data."
+          - "`sudo wings diagnostics`"
+          - "Please post your error in <#817872891764670514> as this is likely not an egg issue."
+
+      - keyword: "a fatal error was encountered booting this container"
+        response:
+          - "You'll need to grab error logs from the Wings. The following command allows to easily collect the relevant data."
+          - "`sudo wings diagnostics`"
+          - "Please post your error in one of these channels <#817872891764670514> as this is likely not an egg issue."
+
+      - keyword: "no such file or directory"
+        response: &install_failed
+          - "&user& It looks like your install has failed."
+          - "We need your install logs to see why the install may have failed. Use the command below on your Wings machine SSH terminal."
+          - ""
+          - "If you are on 1.x"
+          - "```tail -n 1000 $(ls -Alrt /var/log/pterodactyl/install/*.log | tail -1 | sed 's/  */ /g' | cut -s -d' ' -f9) | nc pteropaste.com 99```"
+          - "If you are on or upgraded from 0.7"
+          - "```tail -n 1000 $(ls -Alrt /srv/daemon/config/servers/*/install.log | tail -1 | sed 's/  */ /g' | cut -s -d' ' -f9) | nc pteropaste.com 99```"
+
+      - keyword: "install script failed with code"
+        response: *install_failed     
+          
+      - keyword: "how to update java"
+        response: &change_java
+          - | 
+           Java version and all other dependencies are determined by the used Docker image which you can change in the startup tab.
+           
+           Here is a guide on how to add new images <https://discord.com/channels/122900397965705216/404105683336953866/786906574622031872>      
+          
+      - keyword: "how to change java"
+        response: *change_java      
+      - keyword: "how to update java"
+        response: *change_java                  
+      - keyword: "java runtime (class file version 60.0), this version of the java runtime only recognizes"
+        response: 
+          - |    
+           Your Minecraft version requires Java 16. Here is a guide on how to add new images <https://discord.com/channels/122900397965705216/404105683336953866/786906574622031872>     
+           
+      - keyword: "java runtime (class file version 61.0), this version of the java runtime only recognizes"
+        response: 
+          - |    
+           Your Minecraft version requires Java 17. Here is a guide on how to add new images <https://discord.com/channels/122900397965705216/404105683336953866/786906574622031872>               
+           
+      - keyword: "an exceptioncaught() event was fired, and it reached at the tail of the pipeline"
+        response: 
+          - |    
+           &user& Your Minecraft version requires older Java version than what you are currently using. Go to the startup tab, change the docker image to `core:java` or `yolks:java_8` for Java 8 and restart the server.
+           
+      - keyword: "unable to create native thread"
+        response: &pid_limit
+          - |        
+            &user&; Increase the `container_pid_limit` in the Wings `config.yml` file located at `/etc/pterodactyl`. Restart wings and the game server to apply these new limits.
+             
+            You can disable this completely by setting the value 0, this is **not** recommended when hosting servers to other users as they can overload the machine beyond the configured resource limits.        
+
+      - keyword: "pthread_create failed"
+        response: *pid_limit         
+        
+      - keyword: "could not find or load main class @unix_args.txt"
+        response:
+          - "&user& You must use Java 17 for Forge 1.17+. Change the Docker image to java_17 in the startup tab."
+
+      - keyword: 'steamapi_init() failed; steamapi_issteamrunning() failed'
+        response:
+          - "The steam api is not running in the docker container"
+          - "This is normal and not an issue"
+
+      - keyword: 'api docs'
+        response:
+          - "You can view the API documentation here: https://dashflo.net/docs/api/pterodactyl/v1/"
+
+      - keyword: 'whoops, something went wrong'
+        response:
+          - "0.7 panel has reached **END-OF-LIFE** and is not supported anymore, please upgrade to current 1.x using the links provided in <#122903114423599104>"   
+
+      - keyword: '(no subscription)'
+        response:
+          - "The user you tried to install the game server with doesn't have permissions to install it. Some games such as Arma don't work with anonymous login and require you to provide the steam account. Startup variables of the egg should ask you to provide the login details."
+        
+
+      - keyword: 'privileged intent provided is not enabled or whitelisted'
+        response:
+          - "Per the Bastion Devs on their discord server."
+          - "<https://bastion.gitbook.io/docs/install/prerequisites>"
+          
+      - keyword: "no x11 display variable was set"
+        response: 
+          - |        
+            &user&; The application you're attempting to run requires a graphical interface. This is an indication of doing something wrong as a server doesn't require it.
+             
+            You are either trying to run a client or installer directly in the server. Should it be the latter, the egg install script handles the installation process properly without any GUI. 
+          
+      - keyword: "cannot allocate memory"
+        response:
+          - "`Cannot allocate memory` indicates your server not having enough memory to run. Increase the available memory, games such as Ark with Gen2 map require +13GB."   
+          
+      - keyword: "the json file provided is not in a format that can be recognized"
+        response:
+          - "Your egg file is invalid or your panel is out of date and doesn't support PTDL_V2 egg formats introduced in Panel version 1.8.0"
+          - "**Panel update guide:** <https://pterodactyl.io/panel/1.0/updating.html>"
+          
+      - keyword: "how to add eggs"
+        response:
+          - "Here is a guide to import eggs"
+          - "<https://github.com/parkervcp/eggs#how-to-import-an-egg>"
+
+      - keyword: '"apparmor_parser": executable file not found'
+        response:
+          - "It looks like you might be missing apparmor and need to install it on your system"
+
+    parsing:
+      image:
+        filetypes:
+          - png
+          - jpg
+      paste:
+        sites:
+          - name: pastebin
+            url: "https://pastebin.com/"
+            format: "https://pastebin.com/raw/&filename&"
+
+          - name: hastebin
+            url: "https://hastebin.com/"
+            format: "https://hastebin.com/raw/&filename&"
+
+          - name: filepaste
+            url: "https://file.properties/paste/"
+            format: "https://s.file.properties/p/raw/&filename&"
+
+          - name: pdtl
+            url: "http://bin.ptdl.co/"
+            format: "http://bin.ptdl.co/&filename&"
+
+          - name: pdtls
+            url: "https://bin.ptdl.co/"
+            format: "https://bin.ptdl.co/&filename&"
+
+          - name: ptero
+            url: "https://ptero.co/"
+            format: "https://ptero.co/raw/&filename&"
+
+          - name: ghostbin
+            url: "https://ghostbin.com/"
+            format: "https://ghostbin.com/&filename&/raw"
+          - name: oaka
+            url: "http://bin.oaka.xyz/"
+            format: "http://bin.oaka.xyz/&filename&"
+          - name: oakas
+            url: "https://bin.oaka.xyz/"
+            format: "https://bin.oaka.xyz/&filename&"
+            
+          - name: pteropaste
+            url: "https://pteropaste.com/"
+            format: "https://pteropaste.com/&filename&"
+          - name: pterosh
+            url: "http://bin.ptero.sh/"
+            format: "http://bin.ptero.sh/&filename&"
+          - name: pteroshs
+            url: "https://bin.ptero.sh/"
+            format: "https://bin.ptero.sh/&filename&"                
+
+        ignore:
+          - name: pterodactyl
+            url: "https://pterodactyl.io"
+
+          - name: github
+            url: "https://github.com"
+
+          - name: google
+            url: "https://google.com"
+            
+          - name: ghcr
+            url: "ghcr.io"
+
+  - channels: # supporters
+      - "297133809130799127"
+    mentions:
+      ping:
+        reaction: 
+        - "🍩"
+      mention:
+        reaction: 
+        - "🍩"
+
+    commands:
+      - command: dorks
+        response:
+          - "https://giphy.com/gifs/heyarnold-hey-arnold-nicksplat-3o6nUVI7UEkXINQxwc"
+
+      - command: ooohhh
+        response:
+          - "https://giphy.com/gifs/regular-show-rigby-mordecai-EEP45Q9RolYzu"
+
+      - command: not kawaii
+        response:
+          - "https://giphy.com/gifs/tsyOrm9P1Oj9C"
+
+      - command: konnichi wa
+        response:
+          - "https://tenor.com/view/filthy-frank-weeaboo-konnichi-wa-you-magnificent-bastards-gif-15724021"
+
+  - channels: # api-and-modding
+      - "936744899787784282"
+
+    commands:
+      - command: ws
+        response:
+         - |
+           You have to either include origin header matching your panel URL or add your origin to the wings `allowed_origins` in the `config.yml`, by default located at `etc/pterodactyl`. By default, only the panel APP_URL origin is allowed to reach the websocket. Use the correct HTTP or HTTPS scheme. Wildcard `'*'` can be used to allow all origins. 
+            ```
+            allowed_origins:
+            - https://test.source.com
+            - http://another.panel.com
+            ```
+            
+            Restart Wings `systemctl restart wings` to apply the new changes.
+            
+      - command: build
+        response: 
+          - |
+            You must rebuild the Panel bundle to apply any new changes to the typescript files. Here is a guide: <https://pterodactyl.io/community/customization/panel.html>
+            
+            Should you want to build a custom wings binary, please refer to: <https://pterodactyl.io/community/customization/wings.html>
+            
+    keywords:
+      - keyword: "accessdeniedhttpexception"
+        response: &wrongToken
+          - |
+            &user& Most common causes for access denied are the following:
+            
+            - Using the wrong bearer token. `/client` endpoint requires a client token from the client view, such as `your-panel.com/account/api` and `/application` endpoint token can be generated from the admin panel.
+            - Using wrong domain. The example domain from documentation must be replaced with your own Panel domain.
+            - Should you be trying to access the websocket, please type `.ws` for me to reply with additional information.
+            
+      - keyword: "unexecpted server response: 403"
+        response: *wrongToken  
+ 
+      - keyword: "find any nodes satisfying the request"
+        response: &no_nodes
+        - |
+           &user& This can be caused from any of the following:
+           
+           - Wrong location
+           - Not enough Disk Space/RAM on your Node allocation limits (check Node Settings on the Panel)
+           - No available Node allocations matching the provided criteria
+           - Private Node. To make it public, please enable `Allow Automatic Allocation` in the Node settings.
+           
+           Compare your request with what is available on your Node.
+          
+      - keyword: "no nodes satisfying the requirements specified for automatic deployment could be found"
+        response: *no_nodes
+      - keyword: "could not find nodes that meet the requirements specified for automatic deployment"
+        response: *no_nodes
+        
+      - keyword: "translate"
+        response: 
+        - |
+           The Pterodactyl panel does not currently contain any translation systems, except legacy leftovers for the Admin panel translation. Any translations would require modifying every single component and rebuilding the Panel.
+           
+           Panel update would overwrite all these changes, requiring them to be repeated - unless you manage a separate fork.
+        
+ 
+  - channels: #off-topic
+      - "122900397965705216"
+
+    commands:
+      - command: donate
+        response:
+          - "One-time donations and monthly sponsors are welcome through Github here <https://github.com/sponsors/matthewpi>"
+          - ""
+          - "There are 3 levels of donor. All levels get access to the not so secret donor channel."
+          - "The levels for donations are:"
+          - "Donor I - $5"
+          - "Donor II - $20"
+          - "Donor III - $50"
+ 
+  - channels: # panel and wings-in-docker
+      - "493443683685892096"
+      - "493443725012500490"
+      
+    keywords:
+      - keyword: "pool overlaps with other one on this address space"
+        response:
+          - "&user&; That's a fun one! You already have an existing Docker network that currently conflicts with Pterodactyl."
+          - "Change your Wings subnet to a different one by editing the Wings config file at `/etc/pterodactyl/config.yml`"
+          - ""
+          - "Default example network configuration can be found here: https://discord.com/channels/122900397965705216/493443725012500490/838475977738420284"
+          
+    parsing:
+      image:
+        filetypes:
+          - png
+          - jpg
+      paste:
+        sites:
+          - name: pastebin
+            url: "https://pastebin.com/"
+            format: "https://pastebin.com/raw/&filename&"
+
+          - name: hastebin
+            url: "https://hastebin.com/"
+            format: "https://hastebin.com/raw/&filename&"
+
+          - name: filepaste
+            url: "https://file.properties/paste/"
+            format: "https://s.file.properties/p/raw/&filename&"
+
+          - name: pdtl
+            url: "http://bin.ptdl.co/"
+            format: "http://bin.ptdl.co/&filename&"
+
+          - name: pdtls
+            url: "https://bin.ptdl.co/"
+            format: "https://bin.ptdl.co/&filename&"
+
+          - name: ptero
+            url: "https://ptero.co/"
+            format: "https://ptero.co/raw/&filename&"
+
+          - name: ghostbin
+            url: "https://ghostbin.com/"
+            format: "https://ghostbin.com/&filename&/raw"
+          - name: oaka
+            url: "http://bin.oaka.xyz/"
+            format: "http://bin.oaka.xyz/&filename&"
+          - name: oakas
+            url: "https://bin.oaka.xyz/"
+            format: "https://bin.oaka.xyz/&filename&"
+
+        ignore:
+          - name: pterodactyl
+            url: "https://pterodactyl.io"
+
+          - name: github
+            url: "https://github.com"
+
+          - name: google
+            url: "https://google.com"
+            
+          - name: ghcr
+            url: "ghcr.io"
+
+  - channels: # mobile-support
+      - "583712039374028831"
+
+    commands:
+      - command: 1-0
+        response:
+          - "**About 1.0 support**"
+          - "There is currently no mobile module or app for Pterodactyl 1.0+."
+          - "This module and app currently only work on Pterodactyl 0.7."
+ 
+  - channels: #off-topic
+      - "122900397965705216"
+ 
+  - channels: # panel and wings-in-docker
+      - "493443683685892096"
+      - "493443725012500490"
+      
+    keywords:
+      - keyword: "pool overlaps with other one on this address space"
+        response:
+          - "&user&; That's a fun one! You already have an existing Docker network that currently conflicts with Pterodactyl."
+          - "Change your Wings subnet to a different one by editing the Wings config file at `/etc/pterodactyl/config.yml`"
+          - ""
+          - "Default example network configuration boilerplate can be found here: https://discord.com/channels/122900397965705216/493443725012500490/838475977738420284"
+          
+      - keyword: "bind: cannot assign requested address"
+        response: 
+          - "&user&; Please keep Wings related issues in <#817872891764670514> where I can assist you."  
+
+      - keyword: "bind source path does not exist"
+        response: 
+          - "&user&; The mapped volume doesn't exist or is not accessible. Ensure the volume path is identical inside and outside the Wings container, e.g `/var/lib/pterodactyl/:/var/lib/pterodactyl/` together with using the same volume in Wings `config.yml`."
+          - ""
+          - "Wings will pass the local path from inside the container to Docker on server creation. If they're not identical, this path won't be accessible by Docker on the host machine."
+          
+    parsing:
+      image:
+        filetypes:
+          - png
+          - jpg
+      paste:
+        sites:
+          - name: pastebin
+            url: "https://pastebin.com/"
+            format: "https://pastebin.com/raw/&filename&"
+
+          - name: hastebin
+            url: "https://hastebin.com/"
+            format: "https://hastebin.com/raw/&filename&"
+
+          - name: filepaste
+            url: "https://file.properties/paste/"
+            format: "https://s.file.properties/p/raw/&filename&"
+
+          - name: pdtl
+            url: "http://bin.ptdl.co/"
+            format: "http://bin.ptdl.co/&filename&"
+
+          - name: pdtls
+            url: "https://bin.ptdl.co/"
+            format: "https://bin.ptdl.co/&filename&"
+
+          - name: ptero
+            url: "https://ptero.co/"
+            format: "https://ptero.co/raw/&filename&"
+
+          - name: ghostbin
+            url: "https://ghostbin.com/"
+            format: "https://ghostbin.com/&filename&/raw"
+          - name: oaka
+            url: "http://bin.oaka.xyz/"
+            format: "http://bin.oaka.xyz/&filename&"
+          - name: oakas
+            url: "https://bin.oaka.xyz/"
+            format: "https://bin.oaka.xyz/&filename&"
+
+        ignore:
+          - name: pterodactyl
+            url: "https://pterodactyl.io"
+
+          - name: github
+            url: "https://github.com"
+
+          - name: google
+            url: "https://google.com"
+            
+          - name: ghcr
+            url: "ghcr.io"
+
+
+permissions:
+  - group: admin
+    users:
+      - ""
+    roles:
+      - "122901486790246400"
+      - "484162253625491456"
+  - group: mod
+    users:
+      - ""
+    roles:
+      - "241658539821498369"
+      - "232311812333240330"
+
+filters:
+  - term: "nulledbuilds"
+    reason: &filtered
+      - |
+        &user&: The message you are attempting to send has been removed. Please do not link to sites hosting or distributing illegally acquired software.
+
+        Attempts to circumvent this filter will be met with a permanent ban.
+  - term: "blackspigot"
+    reason: *filtered
+  - term: "pterodactyl-addons.com"
+    reason: *filtered
+  - term: "pterodactyl-addons"
+    reason: *filtered  
+  - term: "pterodactyladdons.com"
+    reason: *filtered      
+  - term: "directleaks.net"
+    reason: *filtered 
+  - term: "nulledbuilds.com"
+    reason: *filtered 
+  - term: "nulled.to"
+    reason: *filtered     
+  - term: "dircordapp.com"
+    reason:
+      - |
+        &user&: While we understand that domain is currently used as a RickRoll meme, it also is extremely deceptive and can easily be used for malicious purposes. Due to this, we have decided to prohibit any messages including it.
+  - term: "rm -rf /"
